@@ -1,6 +1,6 @@
-/* Luxkids Kasse v3.25 – offline navigation for the GitHub Pages app. */
+/* Luxkids Kasse v3.26 – offline navigation for the GitHub Pages app. */
 'use strict';
-const CACHE_NAME='luxkids-kasse-offline-v325';
+const CACHE_NAME='luxkids-kasse-offline-v326';
 const CACHE_PREFIX='luxkids-kasse-offline-';
 const SHELL_URL=new URL('./index.html',self.registration.scope).href;
 const ROOT_URL=new URL('./',self.registration.scope).href;
@@ -41,7 +41,7 @@ self.addEventListener('fetch',event=>{
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),4000);
   try{
-   const response=await fetch(event.request,{signal:controller.signal});
+   const response=await fetch(event.request,{signal:controller.signal,cache:target.searchParams.has('app_update')?'reload':'default'});
    if(response.ok){
     // Cache the app HTML under one canonical URL, regardless of root/index access.
     // Cache write errors must never block a working online checkout page.
