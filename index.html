@@ -1,0 +1,1864 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luxkids – Kollektionssalg · Luxkids Kasse v3.17</title>
+<style>
+:root{font-family:Segoe UI,Arial,sans-serif;color:#26222a;background:#faf8fa}*{box-sizing:border-box}body{margin:0}header{background:#fa20b8;color:white;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}h1{margin:0;font-size:25px}h2{font-size:18px;margin:0 0 13px}.wrap{max-width:1300px;margin:auto;padding:22px;display:grid;grid-template-columns: minmax(0,1.6fr) minmax(310px,1fr);gap:18px}.panel{background:white;border:1px solid #e7e0e7;border-radius:13px;padding:18px;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.item{border:2px solid #eee1ec;background:#fff;border-radius:11px;padding:15px 10px;cursor:pointer;text-align:left;min-height:94px}.item:hover,.item:focus{border-color:#f025ad;background:#fff3fa}.item strong{font-size:25px;display:block}.item .item-icon{font-size:31px;display:block;margin:0 0 5px}.item .item-label{color:#302631;font-size:14px;font-weight:700}.item{touch-action:manipulation}.item span{display:block;color:#655a65;font-size:13px;margin-top:5px}.pink{background:#f025ad;color:#fff;border:none}.dark{background:#372f39;color:white;border:none}.button{padding:12px 15px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer}.button:disabled{opacity:.4;cursor:not-allowed}.light{background:#f5f1f4;border:1px solid #ded5dc;color:#302631}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.controls{display:flex;align-items:center;gap:7px}.controls button{padding:6px 12px;font-size:18px;border:1px solid #ded3db;background:white;border-radius:7px;cursor:pointer}.controls button:disabled{opacity:.3}.line{padding:12px 0;border-bottom:1px solid #eee8ed}.muted{color:#726a71;font-size:13px}.sum{font-size:42px;font-weight:800;color:#d90091;text-align:right}.value{font-size:23px;font-weight:700}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{flex:1}.discount{color:#007d55;font-weight:700}.notice{border-left:4px solid #f025ad;padding:10px 12px;background:#fff0fa;font-size:14px}.status{font-size:13px;color:#635a61}.section{margin-top:18px}.small{font-size:13px}.check{display:flex;gap:9px;align-items:center;cursor:pointer}input[type=checkbox]{width:18px;height:18px}footer{text-align:center;padding:12px 20px;color:#6c5f68;font-size:12px}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:9px 5px;border-bottom:1px solid #eee;text-align:left}td:last-child,th:last-child{text-align:right}@media(max-width:850px){.wrap{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:420px){header{padding:14px}h1{font-size:19px}.wrap{padding:9px;gap:9px}.panel{padding:12px;margin-bottom:10px}.grid{gap:7px}.item{padding:10px 7px;min-height:125px}.item strong{font-size:23px}.item .item-label{font-size:12px}.sum{font-size:34px}}@media print{header,.no-print,.item,.actions,footer{display:none!important}.wrap{display:block}.panel{break-inside:avoid}}
+
+/* v2.1: touch-friendly controls and visible total on phones */
+.item:active,.controls button:active{transform:scale(.97);background:#ffe0f4}
+.item,.button,.controls button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#js-info{padding:12px;background:#fff3d8;border:1px solid #eed48c;border-radius:10px;margin-bottom:12px;font-size:14px}
+#js-info.ready{background:#e9f7ee;border-color:#a6d2b5}
+#live-total{display:none}
+@media(max-width:850px){
+ body{padding-bottom:93px}
+ #live-total{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;align-items:center;justify-content:space-between;background:#382a37;color:white;padding:12px 16px max(12px,env(safe-area-inset-bottom));box-shadow:0 -3px 20px #0002}
+ #live-total strong{font-size:25px}
+ #live-total button{background:#f025ad;color:white;padding:12px 14px;border:0;border-radius:9px;font-weight:700}
+ #live-total button:disabled{opacity:.45}
+}
+
+/* v2.2 – bundles and inspectable history */
+.category-cell{min-width:0;display:flex;flex-direction:column;gap:6px}
+.category-cell>.item{width:100%;flex:1}
+.bundle-add{background:#087a48;color:white;border:0;border-radius:9px;padding:12px 8px;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation;min-height:48px}
+.bundle-add:active{background:#065e38}
+.sale-detail{border:1px solid #e9dfe7;border-radius:9px;margin:8px 0;overflow:hidden}
+.sale-detail summary{cursor:pointer;padding:12px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:650;background:#faf7fa}
+.sale-detail summary::-webkit-details-marker{display:none}
+.sale-detail summary::after{content:'⌄';color:#b40080;font-size:20px}
+.sale-detail[open] summary::after{content:'⌃'}
+.sale-body{padding:12px;font-size:13px}
+.sale-body .sale-line{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid #eee}
+.sale-body .sale-line span:first-child{min-width:0}
+.cart-info{flex:1;min-width:0}.cart-subtotal{text-align:right;min-width:90px}.cart-subtotal strong{display:block;font-size:17px}.cart-discount{color:#007d55;font-size:12px;font-weight:650}.cart-controls{flex-shrink:0}.cart-summary{border-top:2px solid #eee1ec;margin-top:12px;padding-top:12px}.cart-summary .row{padding:4px 0}@media(max-width:420px){.line.row.cart-line{flex-wrap:wrap}.cart-info{flex-basis:calc(100% - 115px)}.cart-subtotal{min-width:90px}.cart-controls{width:100%;justify-content:flex-end}}
+.sale-detail .muted{font-weight:400}
+@media(max-width:420px){.bundle-add{font-size:12px;padding:10px 4px}.sale-detail summary{font-size:12px}}
+
+/* Mobil beta – kompakt layout til ca. 390 x 844 px */
+.mobile-nav,.mobile-panel-header,.mobile-bottom-buttons{display:none}
+@media(max-width:850px){
+  header{display:none}
+  .mobile-nav{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;top:0;left:0;right:0;z-index:70;background:#fff;box-shadow:0 2px 8px #0001;padding:7px;gap:7px}
+  .mobile-nav button{background:#f6eef4;color:#382d36;border:0;border-radius:9px;padding:10px 3px;font-size:13px;font-weight:750;min-height:43px}
+  .mobile-nav .nav-active{background:#f025ad;color:#fff}
+  .wrap{display:block;padding:8px}.panel{padding:11px;margin-bottom:10px}
+  main>section:first-of-type>p.muted{display:none}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .category-cell{gap:4px}.item{min-height:90px;padding:8px 3px;text-align:center;border-radius:10px}
+  .item .item-icon{font-size:23px;line-height:1;margin:0 0 3px}
+  .item strong{font-size:20px;line-height:1.05}
+  .item .item-label{font-size:10.5px;line-height:1.12;margin-top:4px;overflow-wrap:anywhere}
+  .item span:last-child:not(.item-label):not(.item-icon){display:none}
+  .bundle-add{min-height:38px;padding:5px 3px;font-size:10px;line-height:1.1;border-radius:7px}
+  .wrap aside>section:first-child,.wrap aside>section:last-child{display:none}
+  #mobile-cart-panel,#mobile-history-panel{display:none;position:fixed;z-index:45;top:57px;left:0;right:0;bottom:0;bottom:env(safe-area-inset-bottom,0px);margin:0;overflow:auto;overscroll-behavior:contain;border-radius:0;padding:16px 13px 120px;background:#fff}
+  .cart-open #mobile-cart-panel,.history-open #mobile-history-panel{display:block}
+  .mobile-panel-header{display:flex;justify-content:space-between;align-items:center;position:sticky;top:-16px;margin:-16px -13px 12px;padding:14px 13px;background:white;border-bottom:1px solid #eee;z-index:2}
+  .mobile-panel-header h2{margin:0;font-size:20px}.close-drawer{border:1px solid #e6dce4;border-radius:9px;background:#fff;padding:9px 14px;font-size:18px}
+  #drawer-backdrop{display:none}
+  body.cart-open,body.history-open{overflow:hidden}
+  #live-total{z-index:50;padding:9px 12px max(9px,env(safe-area-inset-bottom));gap:8px}
+  #live-total strong{font-size:24px}
+  .mobile-bottom-buttons{display:flex;gap:6px}
+  #live-total .mobile-bottom-buttons button{font-size:12px;padding:12px 10px;white-space:nowrap}
+  #live-total .bottom-cart{background:#fff;color:#2e2130}
+  body{padding-top:57px;padding-bottom:90px}
+  #js-info.ready{display:none}
+  .cart-info{flex-basis:calc(100% - 110px)}
+  .cart-subtotal strong{font-size:16px}
+}
+@media(max-width:350px){.item .item-label{font-size:9.5px}.item strong{font-size:17px}.bundle-add{font-size:9px}.mobile-nav button{font-size:12px}}
+
+/* v2.8: expandable overview directly on the product screen */
+.home-count{display:none}
+@media(max-width:850px){
+ .home-count{display:block;background:#fff;border:1px solid #eadce7;border-radius:13px;margin:0 0 10px;padding:12px;box-shadow:0 2px 9px #00000008}
+ .home-count-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+ .home-count-title{font-size:15px;font-weight:800;color:#3e3340}
+ .home-count-qty{font-size:12px;color:#6c5f68;margin-top:3px}
+ .home-count-amount{font-size:37px;line-height:1.05;font-weight:850;color:#d90091;font-variant-numeric:tabular-nums;white-space:nowrap}
+ .home-count details{margin-top:9px;border-top:1px solid #f1e9ef}
+ .home-count summary{list-style:none;cursor:pointer;padding:12px 2px 3px;color:#9b006b;font-size:14px;font-weight:750;min-height:38px;display:flex;align-items:center;justify-content:space-between;touch-action:manipulation}
+ .home-count summary::-webkit-details-marker{display:none}
+ .home-count summary::after{content:'⌄';font-size:23px;line-height:1}
+ .home-count details[open] summary::after{content:'⌃'}
+ .home-count-basket{padding:4px 0 8px}
+ .home-count-basket .cart-line{gap:6px}
+}
+
+/* v2.9 MobilePay display, isolated test workflow */
+.mp-btn{background:#5b2a92;color:#fff;border:0;border-radius:10px;padding:13px 14px;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.mp-btn:disabled{opacity:.42;cursor:not-allowed}
+.mp-home{width:100%;margin-top:9px}
+.mp-dialog{border:0;border-radius:18px;width:min(94vw,470px);max-height:92dvh;overflow:auto;padding:22px 16px;background:#fff;color:#292331;box-shadow:0 18px 60px #0005;text-align:center}
+.mp-dialog::backdrop{background:#140e1ac7}
+.mp-dialog h2{font-size:22px;margin:0 0 10px}
+.mp-dialog .mp-amount{font-size:44px;font-weight:850;color:#d90091;margin:5px 0 8px}
+.mp-dialog .mp-qr{display:block;width:min(100%,310px);height:auto;aspect-ratio:1;background:#fff;margin:12px auto;border:1px solid #eee;border-radius:8px;image-rendering:pixelated}
+.mp-dialog .mp-close{width:100%;padding:13px;font-size:16px;border:0;border-radius:9px;background:#332b32;color:#fff;font-weight:750}
+.mp-note{font-size:12px;line-height:1.4;color:#6a5965}
+@media(max-width:850px){.mp-dialog{margin:auto;max-height:88dvh}.mp-home{margin-top:10px}}
+
+.precheckout{display:none!important}
+.checkout-screen[hidden]{display:none!important}
+.checkout-screen{position:fixed;inset:0;z-index:120;background:rgba(20,14,26,.84);padding:16px;display:flex;align-items:center;justify-content:center}
+.checkout-card{width:min(94vw,520px);max-height:94dvh;overflow:auto;background:#fff;border-radius:22px;padding:20px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 18px 60px #0005;text-align:center}
+.checkout-mini{font-size:13px;color:#6b5f68;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.checkout-title{font-size:18px;font-weight:800;color:#2f2930;margin:0 0 4px}
+.checkout-total{font-size:clamp(46px,11vw,78px);line-height:1;font-weight:900;color:#d90091;margin:14px 0 10px}
+.checkout-meta{font-size:15px;color:#4a4148;margin-bottom:6px}
+.checkout-discount{font-size:13px;color:#007d55;font-weight:700;margin-bottom:18px}
+.checkout-actions{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.checkout-actions button{width:100%;border:0;border-radius:12px;padding:16px 14px;font-size:17px;font-weight:800;cursor:pointer}
+#checkout-mp{background:#f025ad;color:#fff}
+#checkout-next{background:#2f2930;color:#fff}
+#checkout-edit{background:#f5f1f4;color:#302631;border:1px solid #ded5dc}
+@media(max-width:850px){.checkout-card{width:min(96vw,430px);padding:18px 14px calc(18px + env(safe-area-inset-bottom))}.checkout-total{font-size:58px}}
+
+.item .item-label{font-weight:850!important;line-height:1.2}.item .item-icon{font-size:37px}.category-cell .item{min-height:112px}
+@media(max-width:850px){.item .item-icon{font-size:30px}.category-cell .item{min-height:110px}.item .item-label{font-size:11px}#live-total{gap:5px;padding-left:7px;padding-right:7px}#live-total strong{font-size:22px}#live-total .mobile-bottom-buttons{gap:4px}#live-total .mobile-bottom-buttons button{font-size:11px;padding:11px 7px}#live-total #mobile-undo{background:#5b515b;color:white}#live-total #mobile-undo:disabled{opacity:.38}}
+.special-wrap{margin:9px 0 6px;text-align:right}#price-adjust-toggle{border:0;background:transparent;color:#777079;font-size:12px;font-weight:600;padding:6px 4px;cursor:pointer}#price-adjust-options[hidden]{display:none!important}#price-adjust-options{border:1px solid #eee6ec;border-radius:10px;background:#fcfafc;padding:10px;margin-top:3px;text-align:center}.special-controls{display:flex;gap:8px}.special-controls button{flex:1;background:#f6f3f6;color:#443843;border:1px solid #e5dfe5;border-radius:8px;padding:9px 5px;font-weight:650;font-size:13px}.special-input-row{display:flex;gap:8px;margin-top:6px}.special-input-row input{width:100%;min-width:0;padding:11px;font-size:18px;border-radius:8px;border:1px solid #ccc}.special-input-row button{background:#342a33;color:#fff;border:0;padding:10px;border-radius:8px;font-weight:700}#special-entry{margin-top:10px;text-align:left}#special-entry[hidden],#special-reset[hidden],#special-summary[hidden]{display:none!important}.special-summary{color:#16784f;font-size:13px;font-weight:700;margin:7px 0}#special-reset{border:0;background:none;text-decoration:underline;color:#7d3666;padding:7px}
+
+/* v3.5: product examples taken from Birgitte's price charts */
+.category-cell .item{height:100%;min-height:145px}
+.category-cell .item .item-label{font-weight:850;line-height:1.28;overflow-wrap:break-word;hyphens:auto}
+@media(max-width:850px){.category-cell .item{min-height:142px;padding:9px 4px}.category-cell .item .item-label{font-size:11px;line-height:1.25}}
+@media(max-width:360px){.category-cell .item .item-label{font-size:10px}}
+
+ .category-info{display:none}
+/* v3.5: portrait category buttons, 4 x 3 on mobile; full descriptions on info tap */
+@media (max-width:850px){
+  body{padding-top:54px;padding-bottom:80px}
+  .wrap{padding:5px 6px}
+  main>.panel{padding:7px;margin-bottom:5px}
+  main>.panel h2{font-size:13px;margin-bottom:6px}
+  #keys.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  #keys .category-cell{gap:3px;position:relative;min-width:0}
+  #keys .category-cell>.item{min-height:119px;height:119px;padding:6px 3px 4px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px;overflow:hidden;border-radius:9px}
+  #keys .item .item-icon{font-size:24px;line-height:1;margin:0 0 2px}
+  #keys .item strong{font-size:19px;line-height:1.08;white-space:nowrap}
+  #keys .item .item-label{font-size:9.5px;line-height:1.13;margin-top:2px;font-weight:850;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;overflow-wrap:anywhere;hyphens:auto}
+  #keys .bundle-add{min-height:27px;font-size:9px;line-height:1.05;padding:4px 1px}
+  #keys .category-info{display:block;position:absolute;top:3px;right:3px;border:0;border-radius:50%;background:#fce5f4;color:#aa006f;width:19px;height:19px;padding:0;font-size:13px;font-weight:900;line-height:19px;z-index:1;cursor:pointer}
+  .home-count{margin:6px 0;padding:7px 10px}
+  .home-count-title{font-size:13px}
+  .home-count-amount{font-size:26px}
+  .home-count summary{min-height:28px;padding:6px 2px 1px;font-size:12px}
+  #live-total{padding:7px 7px max(7px,env(safe-area-inset-bottom));gap:4px}
+  #live-total strong{font-size:20px}
+  #live-total .mobile-bottom-buttons{gap:3px}
+  #live-total .mobile-bottom-buttons button{padding:10px 5px;font-size:10px}
+}
+@media(max-width:370px){
+ #keys .item .item-label{font-size:8.8px}
+ #keys .item strong{font-size:17px}
+ #keys .category-cell>.item{height:113px;min-height:113px}
+ #keys .bundle-add{font-size:8px}
+}
+@media(max-height:740px) and (max-width:850px){
+ #keys .category-cell>.item{height:105px;min-height:105px}
+ #keys .item .item-icon{font-size:20px}
+ #keys .item .item-label{-webkit-line-clamp:3;line-clamp:3}
+}
+#category-details{border:0;border-radius:15px;padding:18px;width:min(94vw,430px);box-shadow:0 12px 50px #0005}
+#category-details::backdrop{background:#1f1723b8}
+#category-details h2{font-size:19px;margin:0 0 10px}
+#category-details p{font-size:15px;line-height:1.5;font-weight:700}
+#category-details button{display:block;margin-left:auto;padding:12px 22px;background:#f025ad;color:white;border:0;border-radius:9px;font-weight:800}
+
+/* v3.9: full-width horizontal product rows. Preserve product descriptions and all click targets. */
+#keys.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+#keys .category-cell{position:relative;display:flex;flex-direction:column;gap:4px;min-width:0}
+#keys .category-cell>.item{
+ width:100%;min-height:67px;height:auto;display:grid;
+ grid-template-columns:48px minmax(0,1fr) auto;
+ grid-template-rows:auto;align-items:center;justify-items:stretch;
+ gap:10px;text-align:left;padding:10px 13px;
+ border:1px solid #e9dce5;border-radius:15px;
+ background:#fff;box-shadow:0 2px 7px #38202e12;
+ overflow:visible;
+}
+#keys .item .item-icon{grid-column:1;grid-row:1;margin:0;font-size:34px;line-height:1;text-align:center;align-self:center}
+#keys .item .item-label{grid-column:2;grid-row:1;min-width:0;margin:0!important;font-weight:850!important;font-size:13px;line-height:1.23;display:block;overflow:visible;overflow-wrap:anywhere;hyphens:auto;color:#352b35}
+#keys .item strong{grid-column:3;grid-row:1;font-size:22px;line-height:1.05;white-space:nowrap;text-align:right;color:#d90091}
+#keys .item>span:last-child:not(.item-label):not(.item-icon){display:none!important}
+#keys .category-info{display:none!important}
+#keys .bundle-add{align-self:stretch;margin:0 0 2px 58px;min-height:31px;width:calc(100% - 58px);border-radius:10px;padding:6px 10px;font-size:12px;line-height:1.1;text-align:center}
+@media(max-width:850px){
+ #keys.grid{grid-template-columns:minmax(0,1fr);gap:6px}
+ #keys .category-cell>.item{width:100%;height:auto;min-height:62px;padding:8px 10px;grid-template-columns:37px minmax(0,1fr) auto;gap:8px;border-radius:13px;display:grid;flex-direction:unset;justify-content:unset;align-items:center;overflow:visible}
+ #keys .item .item-icon{font-size:29px;margin:0;line-height:1}
+ #keys .item .item-label{font-size:12px;line-height:1.18;display:block;-webkit-line-clamp:unset;line-clamp:unset;overflow:visible;margin:0}
+ #keys .item strong{font-size:21px;line-height:1;white-space:nowrap}
+ #keys .bundle-add{margin:0 0 1px 45px;width:calc(100% - 45px);min-height:30px;font-size:11px;padding:6px 8px}
+ main>.panel{padding:8px;margin-bottom:6px}
+}
+@media(max-width:370px){#keys .category-cell>.item{grid-template-columns:32px minmax(0,1fr) auto;gap:6px;min-height:61px;padding:7px 8px}#keys .item .item-icon{font-size:25px}#keys .item .item-label{font-size:11px}#keys .item strong{font-size:19px}#keys .bundle-add{margin-left:40px;width:calc(100% - 40px)}}
+
+/* v3.9: compact, full-width one-tap rows; all 12 product keys fit a typical 844px phone viewport. */
+@media(max-width:850px){
+ body{padding-top:51px;padding-bottom:84px}
+ .mobile-nav{padding:4px 7px;gap:5px}
+ .mobile-nav button{min-height:40px;padding:7px 3px}
+ .wrap{padding:5px 7px}
+ main>.panel{padding:6px 7px;margin-bottom:5px;border-radius:10px}
+ main>.panel>h2{font-size:14px;line-height:18px;margin:0 0 5px}
+ main>.panel>p.muted{display:none!important}
+ #keys.grid{grid-template-columns:1fr;gap:4px}
+ #keys .category-cell{display:flex;flex-direction:row;align-items:stretch;gap:4px;min-width:0;position:relative}
+ #keys .category-cell>.item{flex:1;min-width:0;width:100%;height:44px;min-height:44px;padding:4px 7px;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:center;border-radius:11px}
+ #keys .item .item-icon{font-size:24px;line-height:1;grid-column:1}
+ #keys .item .item-label{font-size:11px;line-height:1.13;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;font-weight:850!important;hyphens:none;grid-column:2}
+ #keys .item strong{font-size:19px;white-space:nowrap;grid-column:3}
+ #keys .bundle-add{flex:0 0 68px;width:68px;min-height:44px;height:44px;align-self:stretch;margin:0;border-radius:10px;padding:4px 3px;font-size:10.5px;line-height:1.1;white-space:nowrap}
+ #keys .category-info{display:none!important}
+ .home-count{margin-top:10px}
+ #live-total{padding-top:7px;padding-bottom:max(7px,env(safe-area-inset-bottom))}
+}
+@media(max-width:370px){#keys .category-cell>.item{grid-template-columns:26px minmax(0,1fr) auto;gap:4px;padding:4px 5px}#keys .item .item-icon{font-size:21px}#keys .item .item-label{font-size:10px}#keys .item strong{font-size:17px}#keys .bundle-add{flex-basis:61px;width:61px;font-size:9px}}
+
+/* v3.9: slightly taller full-width item rows; counting summary may scroll below. */
+@media(max-width:850px){
+ #keys.grid{gap:7px}
+ #keys .category-cell{gap:6px}
+ #keys .category-cell>.item{height:57px;min-height:57px;padding:7px 10px;grid-template-columns:36px minmax(0,1fr) auto;gap:9px;border-radius:13px}
+ #keys .item .item-icon{font-size:29px}
+ #keys .item .item-label{font-size:12px;line-height:1.18}
+ #keys .item strong{font-size:21px}
+ #keys .bundle-add{height:57px;min-height:57px;flex-basis:76px;width:76px;font-size:11px;padding:5px 3px}
+ .home-count{margin-top:16px}
+}
+@media(max-width:370px){
+ #keys .category-cell>.item{height:55px;min-height:55px;padding:6px 7px;grid-template-columns:31px minmax(0,1fr) auto;gap:6px}
+ #keys .item .item-icon{font-size:26px}
+ #keys .item .item-label{font-size:11px}
+ #keys .item strong{font-size:19px}
+ #keys .bundle-add{height:55px;min-height:55px;flex-basis:66px;width:66px;font-size:10px}
+}
+
+/* v3.13: subtle highlight directly on the pressed button */
+.category-cell{position:relative}
+.category-cell .item.tap-confirmed{background:#ffe2f3!important;border-color:#f025ad!important;box-shadow:inset 0 0 0 2px #f025ad55,0 0 0 2px #f025ad33!important}
+.category-cell .bundle-add.tap-confirmed{background:#035d38!important;box-shadow:0 0 0 3px #30a46c66!important}
+.tap-count{position:absolute;z-index:4;right:7px;top:4px;pointer-events:none;background:#d90091;color:white;font-size:12px;font-weight:850;padding:3px 7px;border-radius:999px;min-width:26px;text-align:center;line-height:1.2;box-shadow:0 1px 5px #0002}
+.tap-count[hidden]{display:none!important}
+
+/* v3.13: grouped category ordering based on price posters, 2px gutters. */
+@media(max-width:850px){
+ #keys.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px!important;column-gap:2px!important;row-gap:2px!important;border:0;border-radius:10px;overflow:hidden;background:#fff}
+ #keys .category-cell{position:relative;display:flex;flex-direction:column!important;align-items:stretch;justify-content:flex-start;gap:0!important;height:110px;min-height:110px;min-width:0;background:#fff;border:1px solid #d9a9cb;overflow:hidden}
+ #keys .category-cell>.item{display:grid!important;flex:1 1 auto;grid-template-columns:40px minmax(0,1fr)!important;grid-template-rows:34px minmax(0,1fr)!important;column-gap:7px!important;row-gap:3px!important;width:100%;height:auto!important;min-height:0!important;min-width:0;padding:8px 8px 5px!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden;text-align:left;align-items:center;justify-content:stretch}
+ #keys .item .item-icon{grid-column:1;grid-row:1;font-size:32px!important;text-align:center;line-height:1}
+ #keys .item strong{grid-column:2;grid-row:1;font-size:22px!important;line-height:1.05;color:#d90091;text-align:left}
+ #keys .item .item-label{grid-column:1 / -1;grid-row:2;display:-webkit-box!important;-webkit-line-clamp:2!important;line-clamp:2!important;-webkit-box-orient:vertical;overflow:hidden!important;white-space:normal;font-size:13px!important;line-height:1.18!important;margin:0!important;font-weight:850!important;hyphens:none}
+ #keys .bundle-add{flex:0 0 25px!important;height:25px!important;min-height:25px!important;width:100%!important;margin:0!important;padding:2px 4px!important;border-radius:0!important;font-size:11px!important;line-height:1.1!important;text-align:center;white-space:normal;background:#087a48}
+ #keys .category-info{display:none!important}
+ #keys .tap-count{top:4px;right:5px;left:auto;padding:2px 5px;font-size:10px;min-width:20px;box-shadow:none}
+ #keys .category-cell .item.tap-confirmed{background:#ffe2f3!important;border-color:transparent!important;box-shadow:inset 0 0 0 3px #f025ad80!important}
+ #keys .category-cell .bundle-add.tap-confirmed{background:#035d38!important;box-shadow:inset 0 0 0 2px #c4eed8!important}
+ .home-count{margin-top:12px}
+}
+@media(max-width:370px){#keys .item strong{font-size:20px!important}#keys .item .item-label{font-size:12px!important}#keys .item .item-icon{font-size:29px!important}}
+
+/* v3.14: compact navigation, four-pixel gutters, corner bundle action. */
+@media (max-width:850px){
+ .mobile-nav{padding:3px 6px!important;gap:4px!important;box-shadow:0 2px 6px #0001}
+ .mobile-nav button{min-height:36px!important;padding:5px 3px!important;font-size:12px!important;border-radius:7px}
+ #keys.grid{gap:4px!important;column-gap:4px!important;row-gap:4px!important}
+ #keys .category-cell{height:110px!important;min-height:110px!important;position:relative!important;overflow:hidden!important}
+ #keys .category-cell>.item{height:100%!important;min-height:100%!important;padding:8px 7px 8px!important;grid-template-columns:35px minmax(0,1fr)!important;grid-template-rows:34px minmax(0,1fr)!important}
+ #keys .item .item-label{font-size:14px!important;line-height:1.16!important;-webkit-line-clamp:3!important;line-clamp:3!important}
+ #keys .category-cell:has(.bundle-add)>.item{padding-top:8px!important}
+ #keys .category-cell:has(.bundle-add)>.item .item-label{padding-right:2px}
+ #keys .bundle-add{
+   position:absolute!important;z-index:5!important;right:5px!important;top:5px!important;
+   flex:unset!important;width:auto!important;min-width:64px!important;max-width:82px!important;
+   height:27px!important;min-height:27px!important;margin:0!important;padding:3px 5px!important;
+   border:1px solid #88bf9a!important;border-radius:7px!important;
+   background:#e5f3e9!important;color:#087a48!important;
+   font-size:10.5px!important;line-height:1.05!important;font-weight:850!important;
+   box-shadow:0 1px 2px #0001!important;touch-action:manipulation;
+ }
+ #keys .bundle-add.tap-confirmed,#keys .bundle-add:active{background:#087a48!important;color:#fff!important;box-shadow:inset 0 0 0 2px #d1f5dc!important}
+ #keys .category-cell:has(.bundle-add)>.item strong{padding-right:68px;white-space:nowrap}
+ #keys .tap-count{top:auto!important;bottom:3px!important;right:4px!important}
+ #mobile-cart-panel,#mobile-history-panel{top:45px!important}
+}
+@media(max-width:370px){
+ #keys .item .item-label{font-size:13px!important}
+ #keys .bundle-add{font-size:9.5px!important;min-width:57px!important;right:3px!important;top:3px!important}
+ #keys .category-cell:has(.bundle-add)>.item strong{padding-right:61px}
+}
+
+/* v3.16: quiet feedback and double-tap-safe touch targets. */
+button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+#keys .item:active,#keys .category-cell>.item:active{transform:none!important;background:#fff9fc!important}
+.category-cell .item.tap-confirmed,
+#keys .category-cell .item.tap-confirmed{background:#fff6fb!important;border-color:transparent!important;box-shadow:none!important;transform:none!important}
+#keys .bundle-add.tap-confirmed{background:#cfebd8!important;color:#075d37!important;box-shadow:none!important}
+#keys .item .item-label{position:relative}
+#keys .item .item-label.is-truncated::after{content:"...";position:absolute;bottom:0;right:0;background:#fff;padding-left:3px;color:#302631;pointer-events:none}
+#keys .category-info{display:none!important}
+.park-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:11px 0 5px}
+.park-tools button{padding:9px 12px;font-size:13px}
+.parked-carts{display:grid;gap:7px;margin:7px 0 12px}
+.parked-entry{border:1px solid #eadce7;border-radius:9px;padding:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.parked-entry .park-label{flex:1;min-width:0;font-size:13px}
+.parked-entry .park-actions{display:flex;gap:5px}
+.parked-entry button{border:1px solid #e1d6df;border-radius:7px;background:#fff;padding:9px 10px;font-size:12px;font-weight:700;touch-action:manipulation}
+.parked-entry button.park-load{background:#f025ad;color:white;border-color:#f025ad}
+.qty-edit{border:1px solid #dfc6d8!important;background:#fff6fb!important;color:#a00071!important;padding:7px 9px!important;font-size:16px!important;font-weight:850;border-radius:7px;min-width:36px;cursor:pointer}
+.quantity-dialog{width:min(92vw,380px);border:0;border-radius:15px;padding:20px;box-shadow:0 12px 55px #0005}
+.quantity-dialog::backdrop{background:#241624aa}
+.quantity-dialog h2{margin:0 0 8px}
+.quantity-dialog label{display:block;margin:15px 0 6px;font-weight:750}
+.quantity-dialog input{width:100%;font-size:26px;font-weight:800;padding:12px;border:1px solid #cbbfca;border-radius:9px}
+.quantity-actions{display:flex;gap:8px;margin-top:14px}
+.quantity-actions button{flex:1}
+/* Offer cards reserve room for both the price and the top-right offer pill. */
+@media(max-width:850px){
+ #keys .category-cell:has(.bundle-add)>.item{grid-template-columns:27px minmax(0,1fr)!important;column-gap:3px!important}
+ #keys .category-cell:has(.bundle-add)>.item .item-icon{font-size:26px!important}
+ #keys .category-cell:has(.bundle-add)>.item strong{padding-right:0!important;font-size:20px!important}
+ #keys .category-cell:has(.bundle-add) .bundle-add{min-width:58px!important;padding:3px 4px!important;font-size:9.5px!important}
+}
+
+/* v3.17: unobtrusive offline readiness indicator; mobile category grid unchanged. */
+.mp-dialog .mp-note{margin:8px auto 15px;max-width:330px}
+.products-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.offline-status{font-size:11px;font-weight:650;color:#745f72;letter-spacing:0;white-space:nowrap;line-height:1.2}
+.offline-status[data-kind="ready"]{color:#087a48}
+.offline-status[data-kind="error"]{color:#a10a4f}
+</style>
+</head>
+<body>
+<header><h1>Luxkids | Kollektionssalg</h1><strong>v3.17</strong></header>
+<nav class="mobile-nav no-print"><button type="button" id="nav-items" class="nav-active">Varer</button><button type="button" id="nav-cart">Kurv <span id="nav-qty">0</span></button><button type="button" id="nav-history">Historik</button></nav><div id="drawer-backdrop"></div><div class="wrap">
+<main><div id="js-info" role="status">Hvis du kun ser denne besked, eller knapperne ikke reagerer, er filen åbnet i en forhåndsvisning uden JavaScript. På iPhone skal appen åbnes som en webside i Safari (via en HTTPS-adresse). Arkivers forhåndsvisning kan ikke bruges til optælling.</div>
+<button id="mp-home" class="mp-btn mp-home precheckout" type="button" disabled>Vis MobilePay QR · 81277</button>
+<section class="panel"><h2 class="products-heading">1. Registrér varer <span id="offline-status" class="offline-status" aria-live="polite">Offline klargøres…</span></h2><p class="muted">Tryk på varegruppen én gang pr. del. Jakke og bukser tæller som to separate dele. Brug de grønne tilbudsknapper til at tilføje en hel pakke på én gang, eller tryk på varegruppen én gang pr. del. Mængderabatter beregnes automatisk.</p><div class="grid" id="keys"><div class="category-cell"><button aria-label="Tilføj Savlesmække · Stofbleer · Strikhandsker · Huer · Sommerhatte, 20 kr." class="item" data-add="a20" type="button"><span aria-hidden="true" class="item-icon">🧤</span><strong>20 kr.</strong><span class="item-label" data-full="Savlesmække · Stofbleer · Strikhandsker · Huer · Sommerhatte">Savlesmække · Stofbleer · Strikhandsker</span><span>10 dele = 100 kr.</span></button><button aria-label="Tilføj tilbud 10 dele for 100 kroner" class="bundle-add" data-bundle="a20" type="button">+10 / 100</button></div><div class="category-cell"><button aria-label="Tilføj Hagesmække · Huer · Handsker · Bodyer · Leggings · Badehåndklæder · T-shirts · Badetøj, 50 kr." class="item" data-add="a50" type="button"><span aria-hidden="true" class="item-icon">👕</span><strong>50 kr.</strong><span class="item-label" data-full="Hagesmække · Huer · Handsker · Bodyer · Leggings · Badehåndklæder · T-shirts · Badetøj">Hagesmække · Huer · Handsker</span><span>7 dele = 300 kr.</span></button><button aria-label="Tilføj tilbud 7 dele for 300 kroner" class="bundle-add" data-bundle="a50" type="button">+7 / 300</button></div><div class="category-cell"><button aria-label="Tilføj Strik · Cardigan · Softshell-/sommerjakker · Ulddragter · Sko/støvler, 100 kr." class="item" data-add="a100" type="button"><span aria-hidden="true" class="item-icon">🧥</span><strong>100 kr.</strong><span class="item-label" data-full="Strik · Cardigan · Softshell-/sommerjakker · Ulddragter · Sko/støvler">Strik · Cardigan · Softshell-/sommerjakker · Ulddragter · Sko/støvler</span><span>7 dele = 550 kr.</span></button><button aria-label="Tilføj tilbud 7 dele for 550 kroner" class="bundle-add" data-bundle="a100" type="button">+7 / 550</button></div><div class="category-cell"><button aria-label="Tilføj Strømper, 10 kr." class="item" data-add="socks" type="button"><span aria-hidden="true" class="item-icon">🧦</span><strong>10 kr.</strong><span class="item-label" data-full="Strømper">Strømper</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj Undertrøjer · Toppe · Underbukser, 20 kr." class="item" data-add="b20" type="button"><span aria-hidden="true" class="item-icon">🩲</span><strong>20 kr.</strong><span class="item-label" data-full="Undertrøjer · Toppe · Underbukser">Undertrøjer · Toppe · Underbukser</span><span>Uden mængderabat</span></button></div><div class="category-cell"><button aria-label="Tilføj Flyverdragter, 250 kr." class="item" data-add="a250" type="button"><span aria-hidden="true" class="item-icon">🧥</span><strong>250 kr.</strong><span class="item-label" data-full="Flyverdragter">Flyverdragter</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj Vinterjakker · Skibukser, 200 kr." class="item" data-add="a200" type="button"><span aria-hidden="true" class="item-icon">🧥</span><strong>200 kr.</strong><span class="item-label" data-full="Vinterjakker · Skibukser">Vinterjakker · Skibukser</span><span>Vinterjakke / skibukser</span></button></div><div class="category-cell"><button aria-label="Tilføj Vaskeklude · Suttesnore · Rangler · Nusseklude · Punge · Kopper · Julepynt · Gaveposer, 20 kr." class="item" data-add="toy20" type="button"><span aria-hidden="true" class="item-icon">🪀</span><strong>20 kr.</strong><span class="item-label" data-full="Vaskeklude · Suttesnore · Rangler · Nusseklude · Punge · Kopper · Julepynt · Gaveposer">Vaskeklude · Suttesnore · Rangler</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj Dukker · Dukketøj · Bamser · Aktivitetstæpper · Skuldertasker · Penalhuse · Spisesæt · Madkasser, 50 kr." class="item" data-add="toy50" type="button"><span aria-hidden="true" class="item-icon">🧸</span><strong>50 kr.</strong><span class="item-label" data-full="Dukker · Dukketøj · Bamser · Aktivitetstæpper · Skuldertasker · Penalhuse · Spisesæt · Madkasser">Dukker · Dukketøj · Bamser</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj Trælegetøj · Udklædning · Julesokker, 75 kr." class="item" data-add="a75" type="button"><span aria-hidden="true" class="item-icon">🧩</span><strong>75 kr.</strong><span class="item-label" data-full="Trælegetøj · Udklædning · Julesokker">Trælegetøj · Udklædning · Julesokker</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj Store bamser · Tæpper · Rygsække · Quiltede tasker · Julekalendere · Soveposer, 100 kr." class="item" data-add="toy100" type="button"><span aria-hidden="true" class="item-icon">🎒</span><strong>100 kr.</strong><span class="item-label" data-full="Store bamser · Tæpper · Rygsække · Quiltede tasker · Julekalendere · Soveposer">Store bamser · Tæpper · Rygsække</span><span>1 del pr. tryk</span></button></div><div class="category-cell"><button aria-label="Tilføj THE NEW PURE · Træningstrøjer · Toppe · Tights, 25 kr." class="item" data-add="pure25" type="button"><span aria-hidden="true" class="item-icon">🏃</span><strong>25 kr.</strong><span class="item-label" data-full="THE NEW PURE · Træningstrøjer · Toppe · Tights">THE NEW PURE · Træningstrøjer · Toppe · Tights</span><span>5 dele = 100 kr.</span></button><button aria-label="Tilføj tilbud 5 dele for 100 kroner" class="bundle-add" data-bundle="pure25" type="button">+5 / 100</button></div></div></section>
+<section class="home-count" aria-label="Optælling på forsiden"><div class="home-count-top"><div><div class="home-count-title">Optælling</div><div class="home-count-qty"><span id="home-qty">0</span> dele i kurven</div></div><div class="home-count-amount" id="home-total" aria-live="polite">0 kr.</div></div><details id="home-expand"><summary>Vis hele købet</summary><div id="home-basket" class="home-count-basket"><p class="muted">Ingen varer registreret endnu.</p></div></details></section>
+<section class="panel" id="mobile-cart-panel"><div class="mobile-panel-header"><h2>Den aktuelle kurv</h2><button type="button" class="close-drawer" aria-label="Luk kurv">✕</button></div><div id="basket"><p class="muted">Ingen varer registreret endnu.</p></div><div class="park-tools"><button id="park-cart" type="button" class="button light" disabled>Parker kurv</button><span class="muted">Hent en parkeret kurv herunder</span></div><div id="parked-carts" class="parked-carts"></div><button class="mp-btn mp-home precheckout" id="mp-cart" type="button" disabled>Vis MobilePay QR · 81277</button><div class="actions no-print"><button class="button light" id="undo">↶ Fortryd sidste tryk</button><button class="button light" id="clear">Ryd kurv</button></div></section>
+</main>
+<aside>
+<section class="panel"><h2>3. Optælling</h2><div class="row"><span>Antal dele</span><strong id="quantity" class="value">0</strong></div><div class="row"><span>Rabat</span><strong id="savings" class="discount">0 kr.</strong></div><hr><div class="muted" style="text-align:right">Beløb i alt</div><div id="total" class="sum">0 kr.</div><button class="mp-btn mp-home precheckout" id="mp-desktop" type="button" disabled>Vis MobilePay QR · 81277</button><button id="complete" class="button pink" style="width:100%;padding:17px">Gennemfør salg</button><p class="notice">Tryk på <strong>Gennemfør salg</strong>, når optællingen er færdig. Du ser først kundens total. Salget gemmes, når du vælger NÆSTE KUNDE.</p><div id="message" role="status" class="status"></div></section>
+<section class="panel" id="mobile-history-panel"><div class="mobile-panel-header"><h2>Salgsoversigt</h2><button type="button" class="close-drawer" aria-label="Luk historik">✕</button></div><div class="row"><span>Afsluttede salg</span><strong id="sales-count">0</strong></div><div class="row"><span>Solgte dele</span><strong id="sold-count">0</strong></div><div class="row"><span>Omsætning</span><strong id="revenue">0 kr.</strong></div><div class="section"><h3 class="small">Alle gemte salg · tryk for at se detaljer</h3><div id="recent" class="muted">Ingen salg endnu.</div></div><div class="actions no-print"><button class="button light" id="csv">Eksportér salg (CSV)</button><button class="button light" id="backup">Backup (JSON)</button><button class="button light" id="restore">Gendan backup</button><input id="restorefile" type="file" accept="application/json,.json" hidden></div></section>
+<section class="panel"><h2>Vigtigt før I starter</h2><p class="small">Åbn denne fil i samme browser på samme pc hver gang. Data gemmes lokalt i browserens lager. Brug ikke privat/inkognito-vindue og slet ikke browserens webstedsdata.</p><p class="small">Tag en JSON-backup ved dagens afslutning. Gem backup på et andet drev.</p><p class="small">Tilbud regnes pr. varegruppe. Fra tilbudsgrænsen fortsætter den nedsatte, nedrundede stykpris for hver ekstra del.</p></section>
+</aside>
+</div><div id="live-total"><div><small>Aktuel kurv · <span id="mobile-qty">0</span> dele</small><br><strong id="mobile-sum">0 kr.</strong></div><div class="mobile-bottom-buttons"><button id="mobile-cart-open" type="button" class="bottom-cart">Se kurv</button><button id="mobile-undo" type="button" disabled aria-label="Fortryd sidste handling">↶ Fortryd</button><button id="mobile-save" type="button" disabled>Gennemfør salg</button></div></div><div id="checkout-screen" class="checkout-screen" hidden aria-hidden="true"><div class="checkout-card"><div class="checkout-mini">Gennemfør salg</div><div class="checkout-title">Kunden skal betale</div><div id="checkout-total" class="checkout-total">0 kr.</div><div class="checkout-meta"><span id="checkout-parts">0</span> dele i kurven</div><div id="checkout-discount" class="checkout-discount">Ingen mængderabat</div><div class="special-wrap"><button id="price-adjust-toggle" type="button" aria-expanded="false" aria-controls="price-adjust-options">Justér beløb <span aria-hidden="true">⌄</span></button><div id="price-adjust-options" hidden><div class="special-controls"><button id="special-custom-toggle" type="button">Indtast beløb</button><button id="special-half" type="button">½ pris</button></div><div id="special-entry" hidden><label for="special-input">Beløb i hele kr.</label><div class="special-input-row"><input id="special-input" type="number" min="1" step="1" inputmode="numeric" placeholder="Indtast ny total"><button id="special-apply" type="button">Anvend</button></div></div><p id="special-summary" class="special-summary" hidden></p><button id="special-reset" type="button" hidden>Normal pris</button></div></div><div class="checkout-actions"><button id="checkout-mp" type="button">Vis MobilePay QR · 81277</button><button id="checkout-next" type="button">NÆSTE KUNDE</button><button id="checkout-edit" type="button">Tilbage til varer</button></div></div></div><dialog id="quantity-dialog" class="quantity-dialog"><form id="quantity-form"><h2 id="quantity-title">Sæt antal</h2><p class="muted">Angiv det samlede antal for kategorien. 0 fjerner kategorien fra kurven.</p><label for="quantity-input">Antal dele</label><input id="quantity-input" type="number" min="0" max="9999" step="1" inputmode="numeric" required><div class="quantity-actions"><button type="button" id="quantity-cancel" class="button light">Annuller</button><button type="submit" class="button pink">Gem antal</button></div></form></dialog><dialog id="mp-dialog" class="mp-dialog" aria-labelledby="mp-title"><h2 id="mp-title">Betal med MobilePay</h2><div class="muted">Luxkids · erhvervsnummer <strong>81277</strong></div><div class="mp-amount" id="mp-amount">0 kr.</div><canvas id="mp-qr" class="mp-qr" width="360" height="360" aria-label="QR-kode til MobilePay"></canvas><p class="mp-note">Kontrollér modtager og beløb i kundens MobilePay. QR-koden bekræfter ikke betaling. Gem kun salget efter manuel kontrol.</p><button class="mp-close" id="mp-close" type="button">Luk QR-kode</button></dialog><footer>Luxkids – kasseoptælling · v3.17. MobilePay QR er en hjælpefunktion – ingen automatisk betalingsbekræftelse.</footer>
+<script>
+'use strict';
+
+/* Bundled MIT-licensed QRCode for JavaScript, Kazuhiko Arase, via qrcode-terminal */
+const QRLib=(function(){const mods={},cache={};function req(id){if(!cache[id]){if(!mods[id])throw Error("QR module not found: "+id);let m={exports:{}};cache[id]=m;mods[id](m,m.exports,function(path){return req(path.slice(2))})}return cache[id].exports;}
+mods['QRMode']=function(module,exports,require){
+module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+
+};
+mods['QR8bitByte']=function(module,exports,require){
+var QRMode = require('./QRMode');
+
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+
+QR8bitByte.prototype = {
+
+	getLength : function() {
+		return this.data.length;
+	},
+	
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+
+module.exports = QR8bitByte;
+
+};
+mods['QRMath']=function(module,exports,require){
+var QRMath = {
+
+	glog : function(n) {
+	
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		
+		return QRMath.LOG_TABLE[n];
+	},
+	
+	gexp : function(n) {
+	
+		while (n < 0) {
+			n += 255;
+		}
+	
+		while (n >= 256) {
+			n -= 255;
+		}
+	
+		return QRMath.EXP_TABLE[n];
+	},
+	
+	EXP_TABLE : new Array(256),
+	
+	LOG_TABLE : new Array(256)
+
+};
+	
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+
+module.exports = QRMath;
+
+};
+mods['QRPolynomial']=function(module,exports,require){
+var QRMath = require('./QRMath');
+
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+
+	var offset = 0;
+
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+
+QRPolynomial.prototype = {
+
+	get : function(index) {
+		return this.num[index];
+	},
+	
+	getLength : function() {
+		return this.num.length;
+	},
+	
+	multiply : function(e) {
+	
+		var num = new Array(this.getLength() + e.getLength() - 1);
+	
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+	
+		return new QRPolynomial(num, 0);
+	},
+	
+	mod : function(e) {
+	
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+	
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+	
+		var num = new Array(this.getLength() );
+		
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+	
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+
+module.exports = QRPolynomial;
+
+};
+mods['QRMaskPattern']=function(module,exports,require){
+module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+
+};
+mods['QRErrorCorrectLevel']=function(module,exports,require){
+module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+
+
+};
+mods['QRRSBlock']=function(module,exports,require){
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+
+QRRSBlock.RS_BLOCK_TABLE = [
+
+	// L
+	// M
+	// Q
+	// H
+
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+
+	var length = rsBlock.length / 3;
+	
+	var list = [];
+	
+	for (var i = 0; i < length; i++) {
+
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	
+	return list;
+};
+
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+
+module.exports = QRRSBlock;
+
+};
+mods['QRBitBuffer']=function(module,exports,require){
+function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+
+QRBitBuffer.prototype = {
+
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	
+	getLengthInBits : function() {
+		return this.length;
+	},
+	
+	putBit : function(bit) {
+	
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+	
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+	
+		this.length++;
+	}
+};
+
+module.exports = QRBitBuffer;
+
+};
+mods['QRUtil']=function(module,exports,require){
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+
+var QRUtil = {
+
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+
+    getBCHDigit : function(data) {
+
+        var digit = 0;
+
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+
+        return digit;
+    },
+
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask : function(maskPattern, i, j) {
+        
+        switch (maskPattern) {
+            
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+
+        var a = new QRPolynomial([1], 0);
+
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+
+        return a;
+    },
+
+    getLengthInBits : function(mode, type) {
+
+        if (1 <= type && type < 10) {
+
+            // 1 - 9
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 27) {
+
+            // 10 - 26
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 41) {
+
+            // 27 - 40
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+
+    getLostPoint : function(qrCode) {
+        
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+
+        
+        // LEVEL1
+        
+        for (row = 0; row < moduleCount; row++) {
+
+            for (col = 0; col < moduleCount; col++) {
+
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+
+                for (var r = -1; r <= 1; r++) {
+
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+
+                    for (var c = -1; c <= 1; c++) {
+
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+
+        // LEVEL2
+
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+
+        // LEVEL3
+
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        // LEVEL4
+        
+        var darkCount = 0;
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+
+        return lostPoint;       
+    }
+
+};
+
+module.exports = QRUtil;
+
+};
+mods['index']=function(module,exports,require){
+//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of 
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+// Modified to work in node for this project (and some refactoring)
+//---------------------------------------------------------------------
+
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+
+QRCode.prototype = {
+	
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	
+	makeImpl : function(test, maskPattern) {
+		
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		
+		for (var row = 0; row < this.moduleCount; row++) {
+			
+			this.modules[row] = new Array(this.moduleCount);
+			
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+	
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+	
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+	
+		this.mapData(this.dataCache, maskPattern);
+	},
+
+	setupPositionProbePattern : function(row, col)  {
+		
+		for (var r = -1; r <= 7; r++) {
+			
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			
+			for (var c = -1; c <= 7; c++) {
+				
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	
+	getBestMaskPattern : function() {
+	
+		var minLostPoint = 0;
+		var pattern = 0;
+	
+		for (var i = 0; i < 8; i++) {
+			
+			this.makeImpl(true, i);
+	
+			var lostPoint = QRUtil.getLostPoint(this);
+	
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+	
+		return pattern;
+	},
+	
+	createMovieClip : function(target_mc, instance_name, depth) {
+	
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+	
+		this.make();
+
+		for (var row = 0; row < this.modules.length; row++) {
+			
+			var y = row * cs;
+			
+			for (var col = 0; col < this.modules[row].length; col++) {
+	
+				var x = col * cs;
+				var dark = this.modules[row][col];
+			
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		
+		return qr_mc;
+	},
+
+	setupTimingPattern : function() {
+		
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+	
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	
+	setupPositionAdjustPattern : function() {
+	
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		
+		for (var i = 0; i < pos.length; i++) {
+		
+			for (var j = 0; j < pos.length; j++) {
+			
+				var row = pos[i];
+				var col = pos[j];
+				
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				
+				for (var r = -2; r <= 2; r++) {
+				
+					for (var c = -2; c <= 2; c++) {
+					
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	setupTypeNumber : function(test) {
+	
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+	
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+	
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	
+	setupTypeInfo : function(test, maskPattern) {
+	
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+	
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+	
+			mod = (!test && ( (bits >> v) & 1) === 1);
+	
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+	
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+	
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+	
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	
+	},
+	
+	mapData : function(data, maskPattern) {
+		
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+	
+			if (col === 6) col--;
+	
+			while (true) {
+	
+				for (var c = 0; c < 2; c++) {
+					
+					if (this.modules[row][col - c] === null) {
+						
+						var dark = false;
+	
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+	
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+	
+						if (mask) {
+							dark = !dark;
+						}
+						
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+	
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+								
+				row += inc;
+	
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+		
+	}
+
+};
+
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	
+	var buffer = new QRBitBuffer();
+	
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+
+	// padding
+	while (true) {
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+
+QRCode.createBytes = function(buffer, rsBlocks) {
+
+	var offset = 0;
+	
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	
+	for (var r = 0; r < rsBlocks.length; r++) {
+
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		
+		dcdata[r] = new Array(dcCount);
+		
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+
+	}
+	
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+
+	var data = new Array(totalCodeCount);
+	var index = 0;
+
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+
+	return data;
+
+};
+
+module.exports = QRCode;
+
+};
+return {QRCode:req("index"),Level:req("QRErrorCorrectLevel")};})();
+
+const catalog=[
+ {id:'socks',label:'Strømper · par',price:10},
+ {id:'a20',label:'20 kr. · Tilbehør: savlesmække, stofbleer, huer, handsker',price:20,bundle:10,bundlePrice:100,note:'10 dele = 100 kr.'},
+ {id:'b20',label:'20 kr. · Undertøj: toppe, undertrøjer, underbukser',price:20,note:'Uden mængderabat'},
+ {id:'a50',label:'50 kr. · Tøj: bodyer, leggings, T-shirts, badetøj',price:50,bundle:7,bundlePrice:300,note:'7 dele = 300 kr.'},
+ {id:'a75',label:'75 kr. · Trælegetøj, udklædning, julesokker',price:75},
+ {id:'a100',label:'100 kr. · Tøj: strik, bukser, kjoler, jakker, sko',price:100,bundle:7,bundlePrice:550,note:'7 dele = 550 kr.'},
+ {id:'a200',label:'200 kr. · Vinterjakker og skibukser',price:200,note:'Vinterjakke / skibukser'},
+ {id:'a250',label:'250 kr. · Flyverdragter',price:250,note:'Flyverdragt'},
+ {id:'pure25',label:'THE NEW PURE · Træningstøj',price:25,bundle:5,bundlePrice:100,note:'5 dele = 100 kr.'},
+ {id:'toy20',label:'20 kr. · Legetøj, kopper, suttesnore, vaskeklude',price:20,note:'Uden mængderabat'},
+ {id:'toy50',label:'50 kr. · Dukker, bamser, tasker, spisesæt',price:50,note:'Uden mængderabat'},
+ {id:'toy100',label:'100 kr. · Store bamser, tæpper, rygsække, tasker',price:100,note:'Uden mængderabat'},
+];
+const KEY='luxkids_kollektion_kasse_beta_v26';
+let stored;
+try{stored=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
+let state=stored&&Array.isArray(stored.sales)&&Array.isArray(stored.cart)?stored:{cart:[],sales:[]};
+let undoStack=Array.isArray(state.undoStack)?state.undoStack:[];
+if(!Array.isArray(state.parkedCarts))state.parkedCarts=[];
+function checkpoint(){undoStack.push(state.cart.slice());if(undoStack.length>100)undoStack.shift();state.undoStack=undoStack;}
+const $=id=>document.getElementById(id), dkk=n=>n.toLocaleString('da-DK')+' kr.';
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function showSaveFailure(){const msg='Kunne ikke gemme lokalt. Salget er IKKE afsluttet. Lad kurven stå, og tag backup eller kontrollér browserens lager.';$('message').textContent=msg;alert(msg)}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(e){$('message').textContent='Advarsel: Browseren kan ikke gemme data her. Kontrollér browserens lager og tag backup.';return false}}
+function persistState(next){try{localStorage.setItem(KEY,JSON.stringify(next));state=next;return true}catch(e){showSaveFailure();return false}}
+function counts(cart){let o={};for(const id of cart)o[id]=(o[id]||0)+1;return o}
+function categorySubtotal(p,qty){
+ const price=Number(p.price);
+ const count=Number(qty);
+ if(!Number.isFinite(price)||!Number.isFinite(count)||count<0)throw new Error('Ugyldig pris eller antal for '+p.id);
+ if(!p.bundle)return count*price;
+ const bundleSize=Number(p.bundle), bundlePrice=Number(p.bundlePrice);
+ if(!Number.isFinite(bundleSize)||bundleSize<=0||!Number.isFinite(bundlePrice))throw new Error('Ugyldigt tilbud for '+p.id);
+ const bundles=Math.floor(count/bundleSize);
+ return count<bundleSize?count*price:bundlePrice+(count-bundleSize)*Math.floor(bundlePrice/bundleSize);
+}
+function calculate(cart){const c=counts(cart);let base=0,total=0,parts=cart.length,discounts=[];for(const p of catalog){let qty=c[p.id]||0,full=qty*p.price,net=full;if(p.bundle){let bundles=Math.floor(qty/p.bundle);net=categorySubtotal(p,qty);if(bundles)discounts.push(`${p.label}: tilbud fra ${p.bundle} dele`)}base+=full;total+=net}return{base,total,parts,savings:base-total,discounts,counts:c}}
+let flashTimer=null;
+function showTapFeedback(label, delta, button){
+ if(!button)return;
+ document.querySelectorAll('.tap-confirmed').forEach(el=>el.classList.remove('tap-confirmed'));
+ button.classList.add('tap-confirmed');
+ clearTimeout(flashTimer);
+ flashTimer=setTimeout(()=>button.classList.remove('tap-confirmed'),200);
+}
+function updateTapCounts(){
+ const c=counts(state.cart);
+ document.querySelectorAll('#keys .category-cell').forEach(cell=>{
+  const item=cell.querySelector('[data-add]');if(!item)return;
+  let badge=cell.querySelector('.tap-count');
+  if(!badge){badge=document.createElement('span');badge.className='tap-count';cell.appendChild(badge)}
+  const qty=c[item.dataset.add]||0;
+  badge.hidden=qty===0;
+  badge.textContent='×'+qty;
+ });
+}
+function render(){const r=calculate(state.cart);updateTapCounts();$('quantity').textContent=r.parts;$('savings').textContent=dkk(r.savings);$('total').textContent=dkk(r.total);$('mobile-sum').textContent=dkk(r.total);$('mobile-qty').textContent=r.parts;$('nav-qty').textContent=r.parts;$('home-qty').textContent=r.parts;$('home-total').textContent=dkk(r.total);$('mobile-save').disabled=!r.parts;$('mobile-undo').disabled=!undoStack.length;$('undo').disabled=!undoStack.length;$('checkout-next').disabled=!r.parts;$('checkout-mp').disabled=!r.parts;['mp-home','mp-cart','mp-desktop'].forEach(id=>$(id).disabled=!r.parts);if($('mp-dialog').open && r.total!==Number($('mp-dialog').dataset.amount))$('mp-dialog').close();$('basket').innerHTML=state.cart.length?catalog.filter(p=>r.counts[p.id]).map(p=>{const qty=r.counts[p.id];const bundles=p.bundle&&qty>=p.bundle?1:0;const subtotal=categorySubtotal(p,qty);const saving=qty*p.price-subtotal;return `<div class="line row cart-line"><div class="cart-info"><strong>${escapeHtml(p.label)}</strong><div class="muted">${qty} × ${dkk(p.price)} = ${dkk(qty*p.price)}</div>${bundles?`<div class="cart-discount">${bundles} × tilbud (${p.bundle} dele for ${dkk(p.bundlePrice)})${saving?` · spar ${dkk(saving)}`:''}</div>`:''}</div><div class="cart-subtotal"><span class="muted">Subtotal</span><strong>${dkk(subtotal)}</strong></div><div class="controls cart-controls"><button data-minus="${p.id}" title="Fjern én">−</button><button type="button" class="qty-edit" data-set-qty="${p.id}" aria-label="Sæt samlet antal for ${escapeHtml(p.label)}">${qty}</button><button data-plus="${p.id}" title="Tilføj én">+</button></div></div>`}).join('')+`<div class="cart-summary"><div class="row"><span>Varer før rabat</span><strong>${dkk(r.base)}</strong></div><div class="row discount"><span>Tilbudsrabat</span><strong>− ${dkk(r.savings)}</strong></div><div class="row"><strong>Kurv i alt</strong><strong>${dkk(r.total)}</strong></div></div>`:'<p class="muted">Ingen varer registreret endnu.</p>';$('home-basket').innerHTML=$('basket').innerHTML;$('complete').disabled=!r.parts;$('clear').disabled=!r.parts;$('park-cart').disabled=!state.cart.length;renderParkedCarts();}
+function renderHistory(){
+ const s=state.sales;
+ const sums=s.reduce((a,x)=>({total:a.total+Number(x.total||0),parts:a.parts+Number(x.parts||0)}),{total:0,parts:0});
+ $('sales-count').textContent=s.length;
+ $('sold-count').textContent=sums.parts;
+ $('revenue').textContent=dkk(sums.total);
+ $('recent').innerHTML=s.length?s.slice().reverse().map((x,reverseIndex)=>{
+  const c=counts(Array.isArray(x.cart)?x.cart:[]);
+  const rows=Array.isArray(x.lines)?x.lines.map(line=>`<div class="sale-line"><span>${escapeHtml(line.label)} · ${Number(line.qty)} stk.</span><strong>${dkk(Number(line.subtotal))}</strong></div>`).join(''):
+   catalog.filter(p=>c[p.id]).map(p=>{const qty=c[p.id];const price=categorySubtotal(p,qty);return `<div class="sale-line"><span>${escapeHtml(p.label)} · ${qty} stk.</span><strong>${dkk(price)}</strong></div>`}).join('');
+  const date=new Date(x.at);
+  const when=isNaN(date.getTime())?'Ukendt dato':date.toLocaleString('da-DK',{dateStyle:'short',timeStyle:'short'});
+  const discounts=x.bundleSavings===undefined?`<div class="sale-line discount"><span>Samlet rabat (tidligere salg)</span><span>− ${dkk(Number(x.savings)||0)}</span></div>`:
+   `<div class="sale-line discount"><span>Mængderabat</span><span>− ${dkk(Number(x.bundleSavings)||0)}</span></div>`+
+   (Number(x.priceAdjustment)?`<div class="sale-line"><span>Beløbsjustering</span><span>${Number(x.priceAdjustment)>0?'− ':'+ '}${dkk(Math.abs(Number(x.priceAdjustment)))}</span></div>`:'');
+  return `<details class="sale-detail"><summary><span>Salg #${s.length-reverseIndex}<br><span class="muted">${when} · ${Number(x.parts)||0} dele</span></span><strong>${dkk(Number(x.total)||0)}</strong></summary><div class="sale-body">${rows||'<span class="muted">Ingen varelinjer registreret.</span>'}<div class="sale-line"><span>Normalpris</span><span>${dkk(Number(x.base)||0)}</span></div>${discounts}<div class="sale-line"><strong>Samlet</strong><strong>${dkk(Number(x.total)||0)}</strong></div></div></details>`;
+ }).join(''):'Ingen salg endnu.';
+}
+function renderParkedCarts(){
+ const carts=state.parkedCarts||[];
+ $('parked-carts').innerHTML=carts.length?carts.map((entry,i)=>{
+  const sum=calculate(entry.cart);
+  return `<div class="parked-entry"><div class="park-label"><strong>Kurv ${i+1} · ${sum.parts} dele</strong><br><span class="muted">${dkk(sum.total)}</span></div><div class="park-actions"><button type="button" class="park-load" data-park-load="${i}">Hent</button><button type="button" data-park-delete="${i}">Slet</button></div></div>`;
+ }).join(''):'<p class="muted">Ingen parkerede kurve.</p>';
+}
+
+
+document.addEventListener('click',e=>{const quantityButton=e.target.closest('[data-set-qty]');if(quantityButton){openQuantityDialog(quantityButton.dataset.setQty);return}const offer=e.target.closest('[data-bundle]'),plus=e.target.closest('[data-add],[data-plus]'),minus=e.target.closest('[data-minus]');if(offer){const p=catalog.find(p=>p.id===offer.dataset.bundle);if(p&&p.bundle&&confirm(`Er du sikker på, at du vil tilføje dette tilbud?\n\n${p.bundle} dele · ${dkk(p.bundlePrice)}\n${p.label}`)){checkpoint();for(let i=0;i<p.bundle;i++)state.cart.push(p.id);save();render();showTapFeedback(p.label,p.bundle,offer)}return}if(plus){const id=plus.dataset.add||plus.dataset.plus;checkpoint();state.cart.push(id);save();render();const p=catalog.find(p=>p.id===id);showTapFeedback(p?.label||'Vare',1,plus)}if(minus){let i=state.cart.lastIndexOf(minus.dataset.minus);if(i>=0){checkpoint();state.cart.splice(i,1);save();render();const p=catalog.find(p=>p.id===minus.dataset.minus);showTapFeedback(p?.label||'Vare',-1,minus)}}});
+function undoLast(){if(!undoStack.length)return;const was=state.cart.length;state.cart=undoStack.pop();state.undoStack=undoStack;save();render();showTapFeedback("Fortrudt",state.cart.length-was,null)}$('undo').onclick=undoLast;$('mobile-undo').onclick=undoLast;
+$('clear').onclick=()=>{if(state.cart.length&&confirm('Vil du rydde hele den aktuelle kurv?')){checkpoint();state.cart=[];save();render()}};
+// v3.16: one quantity change = one Undo action.
+let quantityTarget=null;
+function openQuantityDialog(id){
+ const p=catalog.find(p=>p.id===id);if(!p)return;
+ quantityTarget=id;
+ $('quantity-title').textContent='Sæt antal · '+p.label;
+ $('quantity-input').value=String(counts(state.cart)[id]||0);
+ const dialog=$('quantity-dialog');
+ if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+ $('quantity-input').focus();$('quantity-input').select();
+}
+$('quantity-cancel').onclick=()=>{$('quantity-dialog').close()};
+$('quantity-form').addEventListener('submit',e=>{
+ e.preventDefault();if(!quantityTarget)return;
+ const value=Number($('quantity-input').value);
+ if(!Number.isSafeInteger(value)||value<0||value>9999){alert('Antallet skal være et helt tal fra 0 til 9999.');return}
+ if(value=== (counts(state.cart)[quantityTarget]||0)){$('quantity-dialog').close();return}
+ checkpoint();state.cart=state.cart.filter(id=>id!==quantityTarget);for(let i=0;i<value;i++)state.cart.push(quantityTarget);
+ save();render();$('quantity-dialog').close();
+});
+// Parking never overwrites a non-empty active basket.
+$('park-cart').onclick=()=>{
+ if(!state.cart.length)return;
+ if(state.parkedCarts.length>=20){alert('Der kan højst være 20 parkerede kurve. Hent eller slet en først.');return}
+ const summary=calculate(state.cart);
+ if(!confirm(`Parkér den aktuelle kurv?\n\n${summary.parts} dele · ${dkk(summary.total)}\n\nDu kan hente den igen under Se kurv.`))return;
+ const next={...state,parkedCarts:[...state.parkedCarts,{at:new Date().toISOString(),cart:state.cart.slice()}],cart:[],undoStack:[]};
+ if(!persistState(next))return;
+ undoStack=[];render();
+};
+$('parked-carts').addEventListener('click',e=>{
+ const load=e.target.closest('[data-park-load]'),del=e.target.closest('[data-park-delete]');if(!load&&!del)return;
+ const idx=Number((load||del).dataset[load?'parkLoad':'parkDelete']);
+ if(!Number.isSafeInteger(idx)||idx<0||idx>=state.parkedCarts.length)return;
+ if(load){
+  if(state.cart.length){alert('Der er allerede varer i den aktuelle kurv. Parker eller afslut den først.');return}
+  const entry=state.parkedCarts[idx];
+  const next={...state,cart:entry.cart.slice(),parkedCarts:state.parkedCarts.filter((_,i)=>i!==idx),undoStack:[]};
+  if(!persistState(next))return;
+  undoStack=[];render();closeDrawer();return;
+ }
+ const summary=calculate(state.parkedCarts[idx].cart);
+ if(!confirm(`Slet parkeret kurv med ${summary.parts} dele? Dette kan ikke fortrydes.`))return;
+ const next={...state,parkedCarts:state.parkedCarts.filter((_,i)=>i!==idx)};
+ if(persistState(next))render();
+});
+let specialPrice=null;
+function checkoutAmount(){return specialPrice===null?calculate(state.cart).total:specialPrice}
+function refreshCheckout(){const r=calculate(state.cart);$("checkout-total").textContent=dkk(checkoutAmount());$("special-summary").hidden=specialPrice===null;if(specialPrice!==null)$("special-summary").textContent=`Normalpris ${dkk(r.total)} · Justeret ${dkk(specialPrice)} · Forskel ${dkk(r.total-specialPrice)}`;$("special-reset").hidden=specialPrice===null;}
+function openCheckout(){if(!state.cart.length)return;specialPrice=null;$('special-entry').hidden=true;$('price-adjust-options').hidden=true;$('price-adjust-toggle').setAttribute('aria-expanded','false');const r=calculate(state.cart);$('checkout-total').textContent=dkk(r.total);$('checkout-parts').textContent=r.parts;$('checkout-discount').textContent=r.savings?`Tilbudsrabat: ${dkk(r.savings)}`:'Ingen mængderabat';$('checkout-screen').hidden=false;$('checkout-screen').setAttribute('aria-hidden','false');document.body.classList.add('checkout-open');refreshCheckout();}
+function closeCheckout(){$('checkout-screen').hidden=true;$('checkout-screen').setAttribute('aria-hidden','true');document.body.classList.remove('checkout-open');}
+function completeSale(){
+ if(!state.cart.length)return;
+ const r=calculate(state.cart),paid=checkoutAmount(),priceAdjustment=r.total-paid;
+ const lines=catalog.filter(p=>r.counts[p.id]).map(p=>{
+  const qty=r.counts[p.id];return {id:p.id,label:p.label,qty,unitPrice:p.price,subtotal:categorySubtotal(p,qty),bundleSavings:qty*p.price-categorySubtotal(p,qty)};
+ });
+ const sale={at:new Date().toISOString(),cart:state.cart.slice(),parts:r.parts,base:r.base,bundleSavings:r.savings,priceAdjustment,savings:r.savings+priceAdjustment,total:paid,originalTotal:r.total,specialPrice,lines};
+ const next={...state,sales:[...state.sales,sale],cart:[],undoStack:[]};
+ if(!persistState(next))return;
+ undoStack=[];specialPrice=null;
+ render();renderHistory();
+ if($('mp-dialog').open)$('mp-dialog').close();closeCheckout();closeDrawer();
+ $('message').textContent='Salget blev gemt. Klar til næste kunde.';
+}
+$('price-adjust-toggle').onclick=()=>{const p=$('price-adjust-options');p.hidden=!p.hidden;$('price-adjust-toggle').setAttribute('aria-expanded',String(!p.hidden))};$('special-half').onclick=()=>{specialPrice=Math.floor(calculate(state.cart).total/2);refreshCheckout()};$('special-custom-toggle').onclick=()=>{$('special-entry').hidden=!$('special-entry').hidden};$('special-apply').onclick=()=>{const v=Number($('special-input').value);if(!Number.isSafeInteger(v)||v<=0||v>10000000){alert('Indtast en gyldig pris i hele kroner.');return}specialPrice=v;refreshCheckout();$('special-entry').hidden=true};$('special-reset').onclick=()=>{specialPrice=null;refreshCheckout()};
+$('complete').onclick=openCheckout;$('mobile-save').onclick=()=>{closeDrawer();openCheckout()};$('checkout-edit').onclick=closeCheckout;$('checkout-next').onclick=completeSale;$('checkout-screen').addEventListener('click',e=>{if(e.target===$('checkout-screen'))closeCheckout()});
+function download(name,content,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
+$('csv').onclick=()=>{const header=['Tidspunkt','Antal dele','Normalpris kr','Rabat kr','Betalt kr','Pris før specialpris kr','Specialpris kr',...catalog.map(p=>p.label),'Mængderabat kr','Beløbsjustering kr'];const rows=state.sales.map(s=>{const c=counts(s.cart);return [s.at,s.parts,s.base,s.savings,s.total,s.originalTotal??s.total,s.specialPrice??"",...catalog.map(p=>c[p.id]||0),s.bundleSavings??'',s.priceAdjustment??'']});const escape=v=>'"'+String(v??'').replace(/"/g,'""')+'"';download('luxkids-salg-'+new Date().toISOString().slice(0,10)+'.csv','\ufeff'+[header,...rows].map(row=>row.map(escape).join(';')).join('\r\n'),'text/csv;charset=utf-8')};
+$('backup').onclick=()=>download('luxkids-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),...state},null,2),'application/json');
+$('restore').onclick=()=>$('restorefile').click();
+$('restorefile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const incoming=JSON.parse(await file.text());if(incoming.version!==1||!Array.isArray(incoming.cart)||!Array.isArray(incoming.sales)||incoming.cart.some(id=>!catalog.some(p=>p.id===id))||incoming.sales.some(s=>!Array.isArray(s.cart)||!Number.isFinite(s.total)||s.cart.some(id=>!catalog.some(p=>p.id===id))))throw new Error('Ugyldigt backupformat');if(!confirm('Gendan backup? Det erstatter ALLE aktuelle salg og den aktuelle kurv på denne pc.'))return;const parked=Array.isArray(incoming.parkedCarts)?incoming.parkedCarts:[];if(parked.some(p=>!Array.isArray(p.cart)||p.cart.some(id=>!catalog.some(c=>c.id===id))))throw new Error('Ugyldige parkerede kurve');if(!persistState({cart:incoming.cart,sales:incoming.sales,parkedCarts:parked,undoStack:[]}))return;undoStack=[];render();renderHistory();$('message').textContent='Backup blev gendannet.'}catch(err){alert('Kunne ikke gendanne: '+err.message)}finally{e.target.value=''}};
+function openDrawer(which){document.body.classList.remove('cart-open','history-open');document.body.classList.add(which==='cart'?'cart-open':'history-open');document.querySelectorAll('.mobile-nav button').forEach(b=>b.classList.remove('nav-active'));$(which==='cart'?'nav-cart':'nav-history').classList.add('nav-active');}
+function closeDrawer(){document.body.classList.remove('cart-open','history-open');document.querySelectorAll('.mobile-nav button').forEach(b=>b.classList.remove('nav-active'));$('nav-items').classList.add('nav-active')}
+$('nav-cart').onclick=()=>openDrawer('cart');$('mobile-cart-open').onclick=()=>openDrawer('cart');$('nav-history').onclick=()=>{renderHistory();openDrawer('history')};$('nav-items').onclick=closeDrawer;$('drawer-backdrop').onclick=closeDrawer;document.querySelectorAll('.close-drawer').forEach(b=>b.onclick=closeDrawer);document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('mp-dialog').open)$('mp-dialog').close();else if(!$('checkout-screen').hidden)closeCheckout();else closeDrawer();}});
+
+const MP_NUMBER='81277';
+function mpPaymentUrl(amount){
+ if(!Number.isSafeInteger(amount)||amount<=0)throw new Error('Ugyldigt beløb');
+ return `https://mobilepay.dk/erhverv/betalingslink/betalingslink-svar?phone=${MP_NUMBER}&amount=${amount}&comment=Luxkids&lock=1`;
+}
+function makeQr(canvas,url){
+ const qr=new QRLib.QRCode(-1,QRLib.Level.M);qr.addData(url);qr.make();
+ const n=qr.getModuleCount(),quiet=4,unit=Math.floor(360/(n+quiet*2)),size=unit*(n+quiet*2);
+ canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.fillStyle='#000';
+ for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(qr.isDark(r,c))ctx.fillRect((c+quiet)*unit,(r+quiet)*unit,unit,unit);
+}
+function showMp(){
+ const r=calculate(state.cart),pay=checkoutAmount();if(!r.parts||!pay)return;
+ const link=mpPaymentUrl(pay),dialog=$('mp-dialog');
+ $('mp-amount').textContent=dkk(pay);dialog.dataset.amount=String(r.total);
+ makeQr($('mp-qr'),link);
+ if(typeof dialog.showModal==='function')dialog.showModal();else{dialog.setAttribute('open','');}
+}
+['mp-home','mp-cart','mp-desktop','checkout-mp'].forEach(id=>$(id).addEventListener('click',showMp));
+$('mp-close').addEventListener('click',()=>$('mp-dialog').close());
+$('mp-dialog').addEventListener('click',e=>{if(e.target===$('mp-dialog'))$('mp-dialog').close()});
+
+
+
+document.querySelectorAll('#keys .item-label').forEach(label=>{
+ label.dataset.shortDescription=label.textContent.replace(/\s*\.{3}$/, '');
+});
+function updateDescriptionTruncation(){
+ document.querySelectorAll('#keys .item-label').forEach(label=>{
+  const text=label.dataset.shortDescription;
+  label.classList.remove('is-truncated');
+  label.textContent=text+' ...';
+  if(label.scrollHeight<=label.clientHeight+2)return;
+  // Reserve three visible dots *within* the category label instead of using a clickable icon.
+  let lo=0,hi=text.length;
+  while(lo<hi){
+   const mid=Math.ceil((lo+hi)/2);
+   label.textContent=text.slice(0,mid).replace(/[\s·,\/-]+$/,'')+' ...';
+   if(label.scrollHeight<=label.clientHeight+2)lo=mid;else hi=mid-1;
+  }
+  label.textContent=text.slice(0,lo).replace(/[\s·,\/-]+$/,'')+' ...';
+ });
+}
+window.addEventListener('resize',updateDescriptionTruncation);
+render();renderHistory();
+requestAnimationFrame(updateDescriptionTruncation);
+const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxkids Kasse v3.17 er klar. Data gemmes lokalt på denne enhed. Tag backup fra Historik.';
+
+// Offline use: install the local app shell while online, then the service worker
+// can serve the same page again after Safari/Chrome discards or reloads the tab.
+(function configureOffline(){
+ const indicator=$('offline-status');
+ if(!indicator)return;
+ let shellCached=false;
+ const setIndicator=(message,kind)=>{indicator.textContent=message;indicator.dataset.kind=kind};
+ const updateConnectionLabel=()=>{
+  if(shellCached)setIndicator(navigator.onLine?'Offline klar':'Offline – klar','ready');
+ };
+ window.addEventListener('online',updateConnectionLabel);
+ window.addEventListener('offline',updateConnectionLabel);
+ if(!('serviceWorker' in navigator)||!window.isSecureContext){
+  setIndicator('Offline ikke tilgængelig','error');return;
+ }
+ (async()=>{
+  try{
+   // When already offline, reuse the previously installed worker without
+   // attempting to re-download its script.
+   let registration=await navigator.serviceWorker.getRegistration('./');
+   if(!registration){
+    registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
+   }else if(navigator.onLine){
+    registration.update().catch(()=>{});
+   }
+   await navigator.serviceWorker.ready;
+   const shellUrl=new URL('./index.html',location.href).href;
+   shellCached=Boolean(await caches.match(shellUrl));
+   if(!shellCached){
+    setIndicator('Offline ikke klar – genindlæs online','error');return;
+   }
+   updateConnectionLabel();
+  }catch(err){
+   setIndicator('Offline ikke klar – prøv igen online','error');
+   console.warn('Kunne ikke klargøre offline-kassen:',err);
+  }
+ })();
+})();
+</script></body></html>
