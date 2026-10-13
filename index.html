@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Luxkids – Kollektionssalg · Luxkids Kasse v3.21</title>
+<title>Luxkids – Kollektionssalg · Luxkids Kasse v3.22</title>
 <meta name="theme-color" content="#f025ad">
 <meta name="application-name" content="Luxkids Kasse">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -334,14 +334,14 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
  #keys .category-cell:has(.bundle-add) .bundle-add{min-width:58px!important;padding:3px 4px!important;font-size:9.5px!important}
 }
 
-/* v3.21: unobtrusive offline readiness indicator; mobile category grid unchanged. */
+/* v3.22: unobtrusive offline readiness indicator; mobile category grid unchanged. */
 .mp-dialog .mp-note{margin:8px auto 15px;max-width:330px}
 .products-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .offline-status{font-size:11px;font-weight:650;color:#745f72;letter-spacing:0;white-space:nowrap;line-height:1.2}
 .offline-status[data-kind="ready"]{color:#087a48}
 .offline-status[data-kind="error"]{color:#a10a4f}
 
-/* v3.21: iPhone-safe floating checkout bar and protected cart scroll area. */
+/* v3.22: iPhone-safe floating checkout bar and protected cart scroll area. */
 @media (max-width:850px){
   #live-total{
     left:6px!important;
@@ -385,10 +385,26 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
   #live-total #mobile-undo{min-width:52px}
   #live-total #mobile-save{min-width:75px}
 }
+
+/* v3.22: edit the prominent pink amount in place; reveal half-price only on request. */
+.checkout-total.editing{display:flex;justify-content:center;align-items:baseline;gap:6px}
+#checkout-total-display[hidden],#checkout-edit-unit[hidden],#special-input[hidden],#price-invalid[hidden]{display:none!important}
+.checkout-total #special-input{
+ width:min(66vw,270px);min-width:0;
+ font-family:inherit;font-size:clamp(38px,10.5vw,65px);font-weight:900;
+ color:#d90091;background:transparent;text-align:right;
+ border:0;border-bottom:2px solid #deb8d3;border-radius:0;
+ padding:0 2px 3px;margin:0;line-height:1.1;outline-offset:3px;
+ -webkit-appearance:none;appearance:none;touch-action:manipulation;
+}
+#checkout-edit-unit{font-size:.52em;color:#d90091;font-weight:850;white-space:nowrap}
+#price-invalid{color:#b00046;text-align:center;font-size:12px;font-weight:700;margin:2px 0 8px}
+#price-adjust-toggle{min-height:36px}
+
 </style>
 </head>
 <body>
-<header><h1>Luxkids | Kollektionssalg</h1><strong>v3.21</strong></header>
+<header><h1>Luxkids | Kollektionssalg</h1><strong>v3.22</strong></header>
 <nav class="mobile-nav no-print"><button type="button" id="nav-items" class="nav-active">Varer</button><button type="button" id="nav-cart">Kurv <span id="nav-qty">0</span></button><button type="button" id="nav-history">Historik</button></nav><div id="drawer-backdrop"></div><div class="wrap">
 <main><div id="js-info" role="status">Hvis du kun ser denne besked, eller knapperne ikke reagerer, er filen åbnet i en forhåndsvisning uden JavaScript. På iPhone skal appen åbnes som en webside i Safari (via en HTTPS-adresse). Arkivers forhåndsvisning kan ikke bruges til optælling.</div>
 <button id="mp-home" class="mp-btn mp-home precheckout" type="button" disabled>Vis MobilePay QR · 81277</button>
@@ -401,7 +417,7 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
 <section class="panel" id="mobile-history-panel"><div class="mobile-panel-header"><h2>Salgsoversigt</h2><button type="button" class="close-drawer" aria-label="Luk historik">✕</button></div><div class="row"><span>Afsluttede salg</span><strong id="sales-count">0</strong></div><div class="row"><span>Solgte dele</span><strong id="sold-count">0</strong></div><div class="row"><span>Omsætning</span><strong id="revenue">0 kr.</strong></div><div class="section"><h3 class="small">Alle gemte salg · tryk for at se detaljer</h3><div id="recent" class="muted">Ingen salg endnu.</div></div><div class="actions no-print"><button class="button light" id="csv">Eksportér salg (CSV)</button><button class="button light" id="backup">Backup (JSON)</button><button class="button light" id="restore">Gendan backup</button><input id="restorefile" type="file" accept="application/json,.json" hidden></div></section>
 <section class="panel"><h2>Vigtigt før I starter</h2><p class="small">Åbn denne fil i samme browser på samme pc hver gang. Data gemmes lokalt i browserens lager. Brug ikke privat/inkognito-vindue og slet ikke browserens webstedsdata.</p><p class="small">Tag en JSON-backup ved dagens afslutning. Gem backup på et andet drev.</p><p class="small">Tilbud regnes pr. varegruppe. Fra tilbudsgrænsen fortsætter den nedsatte, nedrundede stykpris for hver ekstra del.</p></section>
 </aside>
-</div><div id="live-total"><div><small>Aktuel kurv · <span id="mobile-qty">0</span> dele</small><br><strong id="mobile-sum">0 kr.</strong></div><div class="mobile-bottom-buttons"><button id="mobile-cart-open" type="button" class="bottom-cart">Se kurv</button><button id="mobile-undo" type="button" disabled aria-label="Fortryd sidste handling">↶ Fortryd</button><button id="mobile-save" type="button" disabled>Gennemfør salg</button></div></div><div id="checkout-screen" class="checkout-screen" hidden aria-hidden="true"><div class="checkout-card"><div class="checkout-mini">Gennemfør salg</div><div class="checkout-title">Kunden skal betale</div><div id="checkout-total" class="checkout-total">0 kr.</div><div class="checkout-meta"><span id="checkout-parts">0</span> dele i kurven</div><div id="checkout-discount" class="checkout-discount">Ingen mængderabat</div><div class="special-wrap"><button id="price-adjust-toggle" type="button" aria-expanded="false" aria-controls="price-adjust-options">Justér beløb <span aria-hidden="true">⌄</span></button><div id="price-adjust-options" hidden><div id="special-entry"><label for="special-input">Beløb i hele kr.</label><div class="special-input-row"><input id="special-input" type="number" min="1" step="1" inputmode="numeric" placeholder="Indtast ny total"><button id="special-apply" type="button">Anvend</button></div></div><div class="special-controls"><button id="special-half" type="button">½ pris</button></div><p id="special-summary" class="special-summary" hidden></p><button id="special-reset" type="button" hidden>Normal pris</button></div></div><div class="checkout-actions"><button id="checkout-mp" type="button">Vis MobilePay QR · 81277</button><button id="checkout-next" type="button">GENNEMFØR SALG - NÆSTE KUNDE</button><button id="checkout-edit" type="button">Tilbage til varer</button></div></div></div><dialog id="quantity-dialog" class="quantity-dialog"><form id="quantity-form"><h2 id="quantity-title">Sæt antal</h2><p class="muted">Angiv det samlede antal for kategorien. 0 fjerner kategorien fra kurven.</p><label for="quantity-input">Antal dele</label><input id="quantity-input" type="number" min="0" max="9999" step="1" inputmode="numeric" required><div class="quantity-actions"><button type="button" id="quantity-cancel" class="button light">Annuller</button><button type="submit" class="button pink">Gem antal</button></div></form></dialog><dialog id="mp-dialog" class="mp-dialog" aria-labelledby="mp-title"><h2 id="mp-title">Betal med MobilePay</h2><div class="muted">Luxkids · erhvervsnummer <strong>81277</strong></div><div class="mp-amount" id="mp-amount">0 kr.</div><canvas id="mp-qr" class="mp-qr" width="360" height="360" aria-label="QR-kode til MobilePay"></canvas><p class="mp-note">Kontrollér modtager og beløb i kundens MobilePay. QR-koden bekræfter ikke betaling. Gem kun salget efter manuel kontrol.</p><button class="mp-close" id="mp-close" type="button">Luk QR-kode</button></dialog><footer>Luxkids – kasseoptælling · v3.21. MobilePay QR er en hjælpefunktion – ingen automatisk betalingsbekræftelse.</footer>
+</div><div id="live-total"><div><small>Aktuel kurv · <span id="mobile-qty">0</span> dele</small><br><strong id="mobile-sum">0 kr.</strong></div><div class="mobile-bottom-buttons"><button id="mobile-cart-open" type="button" class="bottom-cart">Se kurv</button><button id="mobile-undo" type="button" disabled aria-label="Fortryd sidste handling">↶ Fortryd</button><button id="mobile-save" type="button" disabled>Gennemfør salg</button></div></div><div id="checkout-screen" class="checkout-screen" hidden aria-hidden="true"><div class="checkout-card"><div class="checkout-mini">Gennemfør salg</div><div class="checkout-title">Kunden skal betale</div><div id="checkout-total" class="checkout-total"><span id="checkout-total-display">0 kr.</span><input id="special-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" enterkeyhint="done" aria-label="Justeret beløb i hele kroner" hidden><span id="checkout-edit-unit" hidden>kr.</span></div><p id="price-invalid" role="alert" hidden>Indtast et gyldigt beløb fra 1 til 10.000.000 kr.</p><div class="checkout-meta"><span id="checkout-parts">0</span> dele i kurven</div><div id="checkout-discount" class="checkout-discount">Ingen mængderabat</div><div class="special-wrap"><button id="price-adjust-toggle" type="button" aria-expanded="false" aria-controls="price-adjust-options">Justér beløb <span aria-hidden="true">⌄</span></button><div id="price-adjust-options" hidden><div class="special-controls"><button id="special-half" type="button">½ pris</button></div><p id="special-summary" class="special-summary" hidden></p><button id="special-reset" type="button" hidden>Normal pris</button></div></div><div class="checkout-actions"><button id="checkout-mp" type="button">Vis MobilePay QR · 81277</button><button id="checkout-next" type="button">GENNEMFØR SALG - NÆSTE KUNDE</button><button id="checkout-edit" type="button">Tilbage til varer</button></div></div></div><dialog id="quantity-dialog" class="quantity-dialog"><form id="quantity-form"><h2 id="quantity-title">Sæt antal</h2><p class="muted">Angiv det samlede antal for kategorien. 0 fjerner kategorien fra kurven.</p><label for="quantity-input">Antal dele</label><input id="quantity-input" type="number" min="0" max="9999" step="1" inputmode="numeric" required><div class="quantity-actions"><button type="button" id="quantity-cancel" class="button light">Annuller</button><button type="submit" class="button pink">Gem antal</button></div></form></dialog><dialog id="mp-dialog" class="mp-dialog" aria-labelledby="mp-title"><h2 id="mp-title">Betal med MobilePay</h2><div class="muted">Luxkids · erhvervsnummer <strong>81277</strong></div><div class="mp-amount" id="mp-amount">0 kr.</div><canvas id="mp-qr" class="mp-qr" width="360" height="360" aria-label="QR-kode til MobilePay"></canvas><p class="mp-note">Kontrollér modtager og beløb i kundens MobilePay. QR-koden bekræfter ikke betaling. Gem kun salget efter manuel kontrol.</p><button class="mp-close" id="mp-close" type="button">Luk QR-kode</button></dialog><footer>Luxkids – kasseoptælling · v3.22. MobilePay QR er en hjælpefunktion – ingen automatisk betalingsbekræftelse.</footer>
 <script>
 'use strict';
 
@@ -1799,13 +1815,47 @@ $('parked-carts').addEventListener('click',e=>{
  if(persistState(next))render();
 });
 let specialPrice=null;
-function checkoutAmount(){return specialPrice===null?calculate(state.cart).total:specialPrice}
-function refreshCheckout(){const r=calculate(state.cart);$("checkout-total").textContent=dkk(checkoutAmount());$("special-summary").hidden=specialPrice===null;if(specialPrice!==null)$("special-summary").textContent=`Normalpris ${dkk(r.total)} · Justeret ${dkk(specialPrice)} · Forskel ${dkk(r.total-specialPrice)}`;$("special-reset").hidden=specialPrice===null;}
-function openCheckout(){if(!state.cart.length)return;specialPrice=null;$('special-input').value='';$('price-adjust-options').hidden=true;$('price-adjust-toggle').setAttribute('aria-expanded','false');const r=calculate(state.cart);$('checkout-total').textContent=dkk(r.total);$('checkout-parts').textContent=r.parts;$('checkout-discount').textContent=r.savings?`Tilbudsrabat: ${dkk(r.savings)}`:'Ingen mængderabat';$('checkout-screen').hidden=false;$('checkout-screen').setAttribute('aria-hidden','false');document.body.classList.add('checkout-open');refreshCheckout();}
+let editingPrice=false;
+let invalidPrice=false;
+function checkoutAmount(){
+ if(invalidPrice)return null;
+ return specialPrice===null?calculate(state.cart).total:specialPrice;
+}
+function refreshCheckout(){
+ const r=calculate(state.cart);
+ const amount=checkoutAmount();
+ $('checkout-total-display').textContent=amount===null?'—':dkk(amount);
+ $('checkout-total-display').hidden=editingPrice;
+ $('special-input').hidden=!editingPrice;
+ $('checkout-edit-unit').hidden=!editingPrice;
+ $('checkout-total').classList.toggle('editing',editingPrice);
+ $('price-invalid').hidden=!invalidPrice;
+ $('special-input').setAttribute('aria-invalid',String(invalidPrice));
+ $('checkout-next').disabled=invalidPrice||!r.parts;
+ $('checkout-mp').disabled=invalidPrice||!r.parts;
+ $('special-summary').hidden=invalidPrice||specialPrice===null;
+ if(!invalidPrice&&specialPrice!==null)$('special-summary').textContent=`Normalpris ${dkk(r.total)} · Justeret ${dkk(specialPrice)} · Forskel ${dkk(r.total-specialPrice)}`;
+ $('special-reset').hidden=!invalidPrice&&specialPrice===null;
+}
+function openCheckout(){
+ if(!state.cart.length)return;
+ specialPrice=null;editingPrice=false;invalidPrice=false;
+ $('special-input').value='';
+ $('price-adjust-options').hidden=true;
+ $('price-adjust-toggle').setAttribute('aria-expanded','false');
+ const r=calculate(state.cart);
+ $('checkout-parts').textContent=r.parts;
+ $('checkout-discount').textContent=r.savings?`Tilbudsrabat: ${dkk(r.savings)}`:'Ingen mængderabat';
+ $('checkout-screen').hidden=false;
+ $('checkout-screen').setAttribute('aria-hidden','false');
+ document.body.classList.add('checkout-open');
+ refreshCheckout();
+}
 function closeCheckout(){$('checkout-screen').hidden=true;$('checkout-screen').setAttribute('aria-hidden','true');document.body.classList.remove('checkout-open');}
 function completeSale(){
- if(!state.cart.length)return;
+ if(!state.cart.length||invalidPrice)return;
  const r=calculate(state.cart),paid=checkoutAmount(),priceAdjustment=r.total-paid;
+ if(!Number.isSafeInteger(paid)||paid<1||paid>10000000)return;
  const lines=catalog.filter(p=>r.counts[p.id]).map(p=>{
   const qty=r.counts[p.id];return {id:p.id,label:p.label,qty,unitPrice:p.price,subtotal:categorySubtotal(p,qty),bundleSavings:qty*p.price-categorySubtotal(p,qty)};
  });
@@ -1817,7 +1867,37 @@ function completeSale(){
  if($('mp-dialog').open)$('mp-dialog').close();closeCheckout();closeDrawer();
  $('message').textContent='Salget blev gemt. Klar til næste kunde.';
 }
-$('price-adjust-toggle').onclick=()=>{const p=$('price-adjust-options'),opening=p.hidden;p.hidden=!opening;$('price-adjust-toggle').setAttribute('aria-expanded',String(opening));if(opening){const input=$('special-input');input.value='';input.focus();}};$('special-half').onclick=()=>{specialPrice=Math.floor(calculate(state.cart).total/2);$('special-input').blur();refreshCheckout()};$('special-apply').onclick=()=>{const v=Number($('special-input').value);if(!Number.isSafeInteger(v)||v<=0||v>10000000){alert('Indtast en gyldig pris i hele kroner.');return}specialPrice=v;$('special-input').blur();refreshCheckout()};$('special-reset').onclick=()=>{specialPrice=null;refreshCheckout()};$('special-input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('special-apply').click()}});
+$('price-adjust-toggle').onclick=()=>{
+ editingPrice=true;
+ $('price-adjust-options').hidden=false;
+ $('price-adjust-toggle').setAttribute('aria-expanded','true');
+ const input=$('special-input');
+ if(input.hidden)input.value=String(checkoutAmount()??calculate(state.cart).total);
+ refreshCheckout();
+ input.focus();
+ input.select();
+};
+$('special-input').addEventListener('input',()=>{
+ const raw=$('special-input').value.trim();
+ const num=Number(raw);
+ invalidPrice=!/^\\d+$/.test(raw)||!Number.isSafeInteger(num)||num<1||num>10000000;
+ specialPrice=invalidPrice?null:num;
+ refreshCheckout();
+});
+$('special-input').addEventListener('keydown',e=>{if(e.key==='Enter'){$('special-input').blur();}});
+$('special-half').onclick=()=>{
+ const n=Math.floor(calculate(state.cart).total/2);
+ invalidPrice=n<1;
+ specialPrice=invalidPrice?null:n;
+ $('special-input').value=String(n);
+ $('special-input').blur();
+ refreshCheckout();
+};
+$('special-reset').onclick=()=>{
+ specialPrice=null;invalidPrice=false;
+ $('special-input').value=String(calculate(state.cart).total);
+ refreshCheckout();
+};
 $('complete').onclick=openCheckout;$('mobile-save').onclick=()=>{closeDrawer();openCheckout()};$('checkout-edit').onclick=closeCheckout;$('checkout-next').onclick=completeSale;$('checkout-screen').addEventListener('click',e=>{if(e.target===$('checkout-screen'))closeCheckout()});
 function download(name,content,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
 $('csv').onclick=()=>{const header=['Tidspunkt','Antal dele','Normalpris kr','Rabat kr','Betalt kr','Pris før specialpris kr','Specialpris kr',...catalog.map(p=>p.label),'Mængderabat kr','Beløbsjustering kr'];const rows=state.sales.map(s=>{const c=counts(s.cart);return [s.at,s.parts,s.base,s.savings,s.total,s.originalTotal??s.total,s.specialPrice??"",...catalog.map(p=>c[p.id]||0),s.bundleSavings??'',s.priceAdjustment??'']});const escape=v=>'"'+String(v??'').replace(/"/g,'""')+'"';download('luxkids-salg-'+new Date().toISOString().slice(0,10)+'.csv','\ufeff'+[header,...rows].map(row=>row.map(escape).join(';')).join('\r\n'),'text/csv;charset=utf-8')};
@@ -1840,7 +1920,7 @@ function makeQr(canvas,url){
  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(qr.isDark(r,c))ctx.fillRect((c+quiet)*unit,(r+quiet)*unit,unit,unit);
 }
 function showMp(){
- const r=calculate(state.cart),pay=checkoutAmount();if(!r.parts||!pay)return;
+ const r=calculate(state.cart),pay=checkoutAmount();if(!r.parts||invalidPrice||!Number.isSafeInteger(pay)||pay<1||pay>10000000)return;
  const link=mpPaymentUrl(pay),dialog=$('mp-dialog');
  $('mp-amount').textContent=dkk(pay);dialog.dataset.amount=String(r.total);
  makeQr($('mp-qr'),link);
@@ -1874,7 +1954,7 @@ function updateDescriptionTruncation(){
 window.addEventListener('resize',updateDescriptionTruncation);
 render();renderHistory();
 requestAnimationFrame(updateDescriptionTruncation);
-const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxkids Kasse v3.21 er klar. Data gemmes lokalt på denne enhed. Tag backup fra Historik.';
+const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxkids Kasse v3.22 er klar. Data gemmes lokalt på denne enhed. Tag backup fra Historik.';
 
 // Offline use: install the local app shell while online, then the service worker
 // can serve the same page again after Safari/Chrome discards or reloads the tab.
