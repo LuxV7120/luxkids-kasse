@@ -1,0 +1,20 @@
+{
+  "name": "Luxkids Kasse",
+  "short_name": "Luxkids Kasse",
+  "description": "Kollektionssalg og optælling for Luxkids",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f025ad",
+  "lang": "da",
+  "icons": [
+    {
+      "src": "./luxkids-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
