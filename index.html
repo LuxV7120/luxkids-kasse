@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Luxkids – Kollektionssalg · Luxkids Kasse v3.39</title>
+<title>Luxkids – Kollektionssalg · Luxkids Kasse v3.40</title>
 <meta name="theme-color" content="#f025ad">
 <meta name="application-name" content="Luxkids Kasse">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -334,14 +334,14 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
  #keys .category-cell:has(.bundle-add) .bundle-add{min-width:58px!important;padding:3px 4px!important;font-size:9.5px!important}
 }
 
-/* v3.39: unobtrusive offline readiness indicator; mobile category grid unchanged. */
+/* v3.40: unobtrusive offline readiness indicator; mobile category grid unchanged. */
 .mp-dialog .mp-note{margin:8px auto 15px;max-width:330px}
 .products-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .offline-status{font-size:11px;font-weight:650;color:#745f72;letter-spacing:0;white-space:nowrap;line-height:1.2}
 .offline-status[data-kind="ready"]{color:#087a48}
 .offline-status[data-kind="error"]{color:#a10a4f}
 
-/* v3.39: iPhone-safe floating checkout bar and protected cart scroll area. */
+/* v3.40: iPhone-safe floating checkout bar and protected cart scroll area. */
 @media (max-width:850px){
   #live-total{
     left:6px!important;
@@ -386,7 +386,7 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
   #live-total #mobile-save{min-width:75px}
 }
 
-/* v3.39: edit the prominent pink amount in place; reveal half-price only on request. */
+/* v3.40: edit the prominent pink amount in place; reveal half-price only on request. */
 .checkout-total.editing{display:flex;justify-content:center;align-items:baseline;gap:6px}
 #checkout-total-display[hidden],#checkout-edit-unit[hidden],#special-input[hidden],#price-invalid[hidden]{display:none!important}
 .checkout-total #special-input{
@@ -402,7 +402,7 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
 #price-adjust-toggle{min-height:36px}
 
 
-/* v3.39: nonblocking update notice above the mobile checkout bar. */
+/* v3.40: nonblocking update notice above the mobile checkout bar. */
 #update-notice[hidden]{display:none!important}
 #update-notice{
  position:fixed;z-index:85;right:18px;bottom:18px;width:min(370px,calc(100vw - 24px));
@@ -423,7 +423,7 @@ button,[role="button"]{touch-action:manipulation!important;-webkit-tap-highlight
 body.checkout-open #update-notice,body.cart-open #update-notice,body.history-open #update-notice{display:none!important}
 @media print{#update-notice{display:none!important}}
 
-/* v3.39: centered amount adjustment; secondary checkout actions. */
+/* v3.40: centered amount adjustment; secondary checkout actions. */
 .checkout-card .special-wrap{text-align:center!important}
 .checkout-card #price-adjust-toggle{display:inline-flex;align-items:center;justify-content:center;gap:4px}
 .checkout-secondary-actions{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:1px}
@@ -437,11 +437,11 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 .checkout-actions .checkout-secondary-actions button:disabled{opacity:.4}
 
 
-/* v3.39: the whole pink total is a touch and keyboard edit target. */
+/* v3.40: the whole pink total is a touch and keyboard edit target. */
 .checkout-total:not(.editing){cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(217,0,145,.12)}
 .checkout-total[role="button"]:focus-visible{outline:2px solid #d90091;outline-offset:5px;border-radius:7px}
 
-/* v3.39: offline SVG icons for price adjustment and cart actions. */
+/* v3.40: offline SVG icons for price adjustment and cart actions. */
 .checkout-total:not(.editing){display:flex;align-items:center;justify-content:center;gap:8px}
 #checkout-edit-icon{display:inline-flex;align-items:center;justify-content:center;color:#d90091;flex:none;pointer-events:none}
 #checkout-edit-icon[hidden]{display:none!important}
@@ -450,13 +450,13 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 .checkout-secondary-actions button svg{display:block;width:15px;height:15px;flex:none}
 .checkout-secondary-actions button span{display:inline-block}
 
-/* v3.39: softer Apple-inspired corners for the 12 product keys.
+/* v3.40: softer Apple-inspired corners for the 12 product keys.
    Keep existing positions, size and labels unchanged. */
 #keys .category-cell>.item{
  border-radius:22px!important;
  box-shadow:0 2px 9px rgba(54,30,48,.09);
 }
-/* v3.39: center the edited amount and its kroner suffix as one group. */
+/* v3.40: center the edited amount and its kroner suffix as one group. */
 .checkout-total.editing{display:flex;justify-content:center;align-items:baseline;gap:5px}
 .checkout-total #special-input{
  width:3.2ch;max-width:min(75vw,320px);min-width:3.2ch;
@@ -471,7 +471,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 }
 #price-done:focus-visible{outline:2px solid #d90091;outline-offset:2px}
 
-/* v3.39: round the visible outer product cards. The previous radius on
+/* v3.40: round the visible outer product cards. The previous radius on
    the inner item was clipped by the square-edged category container. */
 #keys .category-cell{
  border-radius:22px!important;
@@ -499,7 +499,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 }
 
 
-/* v3.39: one fixed column per printed price list, in price-list order. */
+/* v3.40: one fixed column per printed price list, in price-list order. */
 #keys.grid{
  display:grid!important;
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -544,7 +544,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
  #keys.grid{gap:4px!important}
 }
 
-/* v3.39: more space for full-size product buttons; history reached via the cart.
+/* v3.40: more space for full-size product buttons; history reached via the cart.
    The 110px category card heights, offer buttons, and 2-column order are unchanged. */
 .cart-history-nav,.history-back-actions{display:none}
 @media(max-width:850px){
@@ -586,7 +586,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
  }
 }
 
-/* v3.39: fit all seven left-column categories when the viewport allows it,
+/* v3.40: fit all seven left-column categories when the viewport allows it,
    without changing product prices, category order, or the lower 80px tap target.
    Dynamic viewport height follows Safari's visible app area. */
 @media(max-width:850px){
@@ -623,27 +623,27 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
  }
 }
 
-/* v3.39: seven self-contained SVG product symbols, no network requests. */
+/* v3.40: seven self-contained SVG product symbols, no network requests. */
 #keys .item-icon svg{display:block;width:32px;height:32px;max-width:100%;margin:0 auto;overflow:visible}
 @media(max-width:850px){#keys .category-cell:has(.bundle-add) .item-icon svg{width:26px;height:26px}}
 
-/* v3.39: consistent mono-line category drawings, wholly embedded for offline use. */
+/* v3.40: consistent mono-line category drawings, wholly embedded for offline use. */
 #keys .item-icon svg{display:block;width:32px;height:32px;max-width:100%;margin:0 auto;overflow:visible}
 @media(max-width:850px){#keys .category-cell:has(.bundle-add) .item-icon svg{width:26px;height:26px}}
 
-/* v3.39: consistent pastel 2D product illustrations, embedded for offline use. */
+/* v3.40: consistent pastel 2D product illustrations, embedded for offline use. */
 #keys .item-icon svg{display:block;width:34px;height:34px;max-width:100%;margin:0 auto;overflow:visible}
 @media(max-width:850px){#keys .category-cell:has(.bundle-add) .item-icon svg{width:27px;height:27px}}
 
-/* v3.39: approved e-commerce illustrations, simplified vector colour shapes. */
+/* v3.40: approved e-commerce illustrations, simplified vector colour shapes. */
 #keys .item-icon svg{display:block;width:32px;height:32px;max-width:100%;margin:auto;overflow:visible}
 @media(max-width:850px){#keys .category-cell:has(.bundle-add) .item-icon svg{width:27px;height:27px}}
 
-/* v3.39: embedded original approved PNG illustrations, offline-safe. */
+/* v3.40: embedded original approved PNG illustrations, offline-safe. */
 #keys .item-icon img{display:block;width:40px;height:40px;max-width:100%;object-fit:contain;margin:0 auto;pointer-events:none}
 @media(max-width:850px){#keys .item-icon img{width:35px;height:35px}#keys .category-cell:has(.bundle-add) .item-icon img{width:29px;height:29px}}
 
-/* v3.39: read-only mini tally fills two unoccupied right-column slots. */
+/* v3.40: read-only mini tally fills two unoccupied right-column slots. */
 #mini-count{display:none}
 @media(max-width:850px){
  #keys .category-column #mini-count{
@@ -662,7 +662,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
  #mini-count #mini-discount{color:#087a48}
  #mini-count .mini-count-total-label{border-top:1px solid #e8dbe5;margin-top:7px;padding-top:9px;font-size:11px}
  #mini-count .mini-count-total{font-size:26px;font-weight:900;color:#d90091;letter-spacing:-.5px;line-height:1.1;white-space:nowrap;font-variant-numeric:tabular-nums}
- .home-count{display:none!important}
+ .home-count{display:block!important}
 }
 @media(max-width:370px){
  #keys .category-column #mini-count{padding:8px 7px;gap:3px}
@@ -675,7 +675,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 </style>
 </head>
 <body>
-<header><h1>Luxkids | Kollektionssalg</h1><strong>v3.39</strong></header>
+<header><h1>Luxkids | Kollektionssalg</h1><strong>v3.40</strong></header>
 <div id="drawer-backdrop"></div><section id="update-notice" hidden role="status" aria-live="polite" aria-label="Opdatering af Luxkids Kasse">
  <strong id="update-heading">Ny version af Luxkids Kasse</strong>
  <p id="update-message">En opdatering er klar. Afslut eventuelle igangværende salg, før du opdaterer.</p>
@@ -695,7 +695,7 @@ body.checkout-open #update-notice,body.cart-open #update-notice,body.history-ope
 <section class="panel" id="mobile-history-panel"><div class="mobile-panel-header"><h2>Salgsoversigt</h2><div class="history-back-actions"><button type="button" id="history-back-cart">← Kurv</button><button type="button" id="history-back-items">Varer</button></div></div><div class="row"><span>Afsluttede salg</span><strong id="sales-count">0</strong></div><div class="row"><span>Solgte dele</span><strong id="sold-count">0</strong></div><div class="row"><span>Omsætning</span><strong id="revenue">0 kr.</strong></div><div class="section"><h3 class="small">Gemte kurve</h3><div id="parked-carts-history" class="parked-carts"></div></div><div class="section"><h3 class="small">Alle gemte salg · tryk for at se detaljer</h3><div id="recent" class="muted">Ingen salg endnu.</div></div><div class="actions no-print"><button class="button light" id="csv">Eksportér salg (CSV)</button><button class="button light" id="backup">Backup (JSON)</button><button class="button light" id="restore">Gendan backup</button><input id="restorefile" type="file" accept="application/json,.json" hidden></div></section>
 <section class="panel"><h2>Vigtigt før I starter</h2><p class="small">Åbn denne fil i samme browser på samme pc hver gang. Data gemmes lokalt i browserens lager. Brug ikke privat/inkognito-vindue og slet ikke browserens webstedsdata.</p><p class="small">Tag en JSON-backup ved dagens afslutning. Gem backup på et andet drev.</p><p class="small">Tilbud regnes pr. varegruppe. Fra tilbudsgrænsen fortsætter den nedsatte, nedrundede stykpris for hver ekstra del.</p></section>
 </aside>
-</div><div id="live-total"><div><small>Aktuel kurv · <span id="mobile-qty">0</span> dele</small><br><strong id="mobile-sum">0 kr.</strong></div><div class="mobile-bottom-buttons"><button id="mobile-cart-open" type="button" class="bottom-cart">Se kurv</button><button id="mobile-undo" type="button" disabled aria-label="Fortryd sidste handling">↶ Fortryd</button><button id="mobile-save" type="button" disabled>Gennemfør salg</button></div></div><div id="checkout-screen" class="checkout-screen" hidden aria-hidden="true"><div class="checkout-card"><div class="checkout-mini">Gennemfør salg</div><div class="checkout-title">Kunden skal betale</div><div id="checkout-total" class="checkout-total" role="button" tabindex="0" aria-label="Tryk for at justere beløbet" aria-controls="price-adjust-options" aria-expanded="false"><span id="checkout-total-display">0 kr.</span><span id="checkout-edit-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M15.5 5.5 18.5 8.5"/><path d="M3 21l4.5-1 12-12a2.12 2.12 0 0 0-3-3l-12 12L3 21z"/></svg></span><input id="special-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" enterkeyhint="done" aria-label="Justeret beløb i hele kroner" hidden><span id="checkout-edit-unit" hidden>kr.</span></div><button id="price-done" type="button" hidden aria-label="Færdig med beløb, luk tastatur">✓ Færdig</button><p id="price-invalid" role="alert" hidden>Indtast et gyldigt beløb fra 1 til 10.000.000 kr.</p><div class="checkout-meta"><span id="checkout-parts">0</span> dele i kurven</div><div id="checkout-discount" class="checkout-discount">Ingen mængderabat</div><div class="special-wrap"><button id="price-adjust-toggle" type="button" aria-expanded="false" aria-controls="price-adjust-options">Justér beløb <span aria-hidden="true">⌄</span></button><div id="price-adjust-options" hidden><div class="special-controls"><button id="special-half" type="button">½ pris</button></div><p id="special-summary" class="special-summary" hidden></p><button id="special-reset" type="button" hidden>Normal pris</button></div></div><div class="checkout-actions"><button id="checkout-mp" type="button">Vis MobilePay QR · 81277</button><button id="checkout-next" type="button">GENNEMFØR SALG - NÆSTE KUNDE</button><button id="checkout-edit" type="button">Tilbage til varer</button><div class="checkout-secondary-actions"><button id="checkout-park" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><path d="M10 12h4"/></svg><span>Gem kurv til senere</span></button><button id="checkout-clear" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg><span>Tøm kurv</span></button></div></div></div></div><dialog id="quantity-dialog" class="quantity-dialog"><form id="quantity-form"><h2 id="quantity-title">Sæt antal</h2><p class="muted">Angiv det samlede antal for kategorien. 0 fjerner kategorien fra kurven.</p><label for="quantity-input">Antal dele</label><input id="quantity-input" type="number" min="0" max="9999" step="1" inputmode="numeric" required><div class="quantity-actions"><button type="button" id="quantity-cancel" class="button light">Annuller</button><button type="submit" class="button pink">Gem antal</button></div></form></dialog><dialog id="mp-dialog" class="mp-dialog" aria-labelledby="mp-title"><h2 id="mp-title">Betal med MobilePay</h2><div class="muted">Luxkids · erhvervsnummer <strong>81277</strong></div><div class="mp-amount" id="mp-amount">0 kr.</div><canvas id="mp-qr" class="mp-qr" width="360" height="360" aria-label="QR-kode til MobilePay"></canvas><p class="mp-note">Kontrollér modtager og beløb i kundens MobilePay. QR-koden bekræfter ikke betaling. Gem kun salget efter manuel kontrol.</p><button class="mp-close" id="mp-close" type="button">Luk QR-kode</button></dialog><footer>Luxkids – kasseoptælling · v3.39. MobilePay QR er en hjælpefunktion – ingen automatisk betalingsbekræftelse.</footer>
+</div><div id="live-total"><div><small>Aktuel kurv · <span id="mobile-qty">0</span> dele</small><br><strong id="mobile-sum">0 kr.</strong></div><div class="mobile-bottom-buttons"><button id="mobile-cart-open" type="button" class="bottom-cart">Se kurv</button><button id="mobile-undo" type="button" disabled aria-label="Fortryd sidste handling">↶ Fortryd</button><button id="mobile-save" type="button" disabled>Gennemfør salg</button></div></div><div id="checkout-screen" class="checkout-screen" hidden aria-hidden="true"><div class="checkout-card"><div class="checkout-mini">Gennemfør salg</div><div class="checkout-title">Kunden skal betale</div><div id="checkout-total" class="checkout-total" role="button" tabindex="0" aria-label="Tryk for at justere beløbet" aria-controls="price-adjust-options" aria-expanded="false"><span id="checkout-total-display">0 kr.</span><span id="checkout-edit-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M15.5 5.5 18.5 8.5"/><path d="M3 21l4.5-1 12-12a2.12 2.12 0 0 0-3-3l-12 12L3 21z"/></svg></span><input id="special-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" enterkeyhint="done" aria-label="Justeret beløb i hele kroner" hidden><span id="checkout-edit-unit" hidden>kr.</span></div><button id="price-done" type="button" hidden aria-label="Færdig med beløb, luk tastatur">✓ Færdig</button><p id="price-invalid" role="alert" hidden>Indtast et gyldigt beløb fra 1 til 10.000.000 kr.</p><div class="checkout-meta"><span id="checkout-parts">0</span> dele i kurven</div><div id="checkout-discount" class="checkout-discount">Ingen mængderabat</div><div class="special-wrap"><button id="price-adjust-toggle" type="button" aria-expanded="false" aria-controls="price-adjust-options">Justér beløb <span aria-hidden="true">⌄</span></button><div id="price-adjust-options" hidden><div class="special-controls"><button id="special-half" type="button">½ pris</button></div><p id="special-summary" class="special-summary" hidden></p><button id="special-reset" type="button" hidden>Normal pris</button></div></div><div class="checkout-actions"><button id="checkout-mp" type="button">Vis MobilePay QR · 81277</button><button id="checkout-next" type="button">GENNEMFØR SALG - NÆSTE KUNDE</button><button id="checkout-edit" type="button">Tilbage til varer</button><div class="checkout-secondary-actions"><button id="checkout-park" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><path d="M10 12h4"/></svg><span>Gem kurv til senere</span></button><button id="checkout-clear" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg><span>Tøm kurv</span></button></div></div></div></div><dialog id="quantity-dialog" class="quantity-dialog"><form id="quantity-form"><h2 id="quantity-title">Sæt antal</h2><p class="muted">Angiv det samlede antal for kategorien. 0 fjerner kategorien fra kurven.</p><label for="quantity-input">Antal dele</label><input id="quantity-input" type="number" min="0" max="9999" step="1" inputmode="numeric" required><div class="quantity-actions"><button type="button" id="quantity-cancel" class="button light">Annuller</button><button type="submit" class="button pink">Gem antal</button></div></form></dialog><dialog id="mp-dialog" class="mp-dialog" aria-labelledby="mp-title"><h2 id="mp-title">Betal med MobilePay</h2><div class="muted">Luxkids · erhvervsnummer <strong>81277</strong></div><div class="mp-amount" id="mp-amount">0 kr.</div><canvas id="mp-qr" class="mp-qr" width="360" height="360" aria-label="QR-kode til MobilePay"></canvas><p class="mp-note">Kontrollér modtager og beløb i kundens MobilePay. QR-koden bekræfter ikke betaling. Gem kun salget efter manuel kontrol.</p><button class="mp-close" id="mp-close" type="button">Luk QR-kode</button></dialog><footer>Luxkids – kasseoptælling · v3.40. MobilePay QR er en hjælpefunktion – ingen automatisk betalingsbekræftelse.</footer>
 <script>
 'use strict';
 
@@ -2297,7 +2297,7 @@ function updateDescriptionTruncation(){
 window.addEventListener('resize',updateDescriptionTruncation);
 render();renderHistory();
 requestAnimationFrame(updateDescriptionTruncation);
-const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxkids Kasse v3.39 er klar. Data gemmes lokalt på denne enhed. Tag backup fra Historik.';
+const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxkids Kasse v3.40 er klar. Data gemmes lokalt på denne enhed. Tag backup fra Historik.';
 
 // Offline use: install the local app shell while online, then the service worker
 // can serve the same page again after Safari/Chrome discards or reloads the tab.
@@ -2338,7 +2338,7 @@ const jsInfo=$('js-info');jsInfo.classList.add('ready');jsInfo.textContent='Luxk
  })();
 })();
 
-/* v3.39: check deployed version independently of the offline service worker.
+/* v3.40: check deployed version independently of the offline service worker.
    A current sale is never reloaded automatically. */
 (function configureAppUpdates(){
  const APP_VERSION=(document.title.match(/Luxkids Kasse v(\d+(?:\.\d+)*)/)||[])[1]||'0.0';
