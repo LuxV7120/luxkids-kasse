@@ -1,10 +1,10 @@
-/* Luxkids Kasse v3.48 – offline navigation for the GitHub Pages app. */
+/* Luxkids Kasse v3.49 – offline navigation for the GitHub Pages app. */
 'use strict';
-const CACHE_NAME='luxkids-kasse-offline-v348';
+const CACHE_NAME='luxkids-kasse-offline-v349';
 const CACHE_PREFIX='luxkids-kasse-offline-';
 const SHELL_URL=new URL('./index.html',self.registration.scope).href;
 const ROOT_URL=new URL('./',self.registration.scope).href;
-const ASSET_URLS=['./apple-touch-icon.png','./luxkids-icon.png','./manifest.webmanifest'].map(path=>new URL(path,self.registration.scope).href);
+const ASSET_URLS=['./apple-touch-icon.png','./luxkids-icon.png','./manifest.webmanifest','./1.png','./2.png'].map(path=>new URL(path,self.registration.scope).href);
 
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{
