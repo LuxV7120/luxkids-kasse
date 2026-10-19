@@ -1,6 +1,6 @@
-/* Luxkids Kasse v3.71 – offline navigation for the GitHub Pages app. */
+/* Luxkids Kasse v3.72 – offline navigation for the GitHub Pages app. */
 'use strict';
-const CACHE_NAME='luxkids-kasse-offline-v371';
+const CACHE_NAME='luxkids-kasse-offline-v372';
 const CACHE_PREFIX='luxkids-kasse-offline-';
 const SHELL_URL=new URL('./index.html',self.registration.scope).href;
 const ROOT_URL=new URL('./',self.registration.scope).href;
